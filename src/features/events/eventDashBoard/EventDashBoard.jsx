@@ -16,7 +16,7 @@ const EventDashBoard = ({formOpen,setFormOpen}) => {
             </Grid.Column>
             <Grid.Column width={6}>
                 {formOpen
-                && <EventForm setFormOpen={setFormOpen} />}
+                && <EventForm setFormOpen={setFormOpen} setEvents={setEvents} />}
             </Grid.Column>
         </Grid>
     );

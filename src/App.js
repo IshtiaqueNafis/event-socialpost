@@ -4,14 +4,12 @@ import EventDashBoard from "./features/events/eventDashBoard/EventDashBoard";
 import NavBar from "./features/nav/NavBar";
 
 const App = () => {
-    const [formOpen, setFormOpen] = useState(false)
+    const [formOpen, setFormOpen] = useState(true)
     return (
-
         <>
             <NavBar setFormOpen={setFormOpen}/>
-
             <Container className="main">
-                <EventDashBoard formOpen={formOpen} setFormOpen={setFormOpen} />
+                <EventDashBoard formOpen={formOpen} setFormOpen={setFormOpen}/>
             </Container>
         </>
     );
