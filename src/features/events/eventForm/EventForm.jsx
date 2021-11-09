@@ -2,11 +2,17 @@ import React, {useState} from 'react';
 import {Button, Form, Header, Segment} from "semantic-ui-react";
 import cuid from "cuid";
 
-const EventForm = ({setFormOpen, setEvents, createEvent}) => {
+const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvents}) => {
+//region ***{setFormOpen, setEvents, createEvent, selectedEvents}***
+    /*
+    setFormOpen --> setthe state of the form so it can be shown
+    createEvent --> creates a new event
+    selectedEvents--> select a single event
+     */
+    //endregion
 
-
-    //region
-    const initialValues = {
+    //region initialValues
+    const initialValues = selectedEvents ?? {
         title: '',
         category: '',
         description: '',
@@ -14,9 +20,12 @@ const EventForm = ({setFormOpen, setEvents, createEvent}) => {
         venue: '',
         date: '',
     }
+    //selectedEvents ?? --> means if selected event is not null pick the Selected Events if not use the selected event.
     //endregion
 
+    //region state
     const [values, setValues] = useState(initialValues); // means this will be the inital values.
+    //endregion
 
     //region methods handleFormSubmit(), handleInputChange(e)
 

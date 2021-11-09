@@ -2,7 +2,18 @@ import React from 'react';
 import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 
-const EventListItem = ({event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue}}) => {
+const EventListItem = ({
+                           event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue},
+                           selectEvent
+                       }) => {
+    //region *** event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue},
+    //                            selectEvent}
+    /*event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue} --> is the event object
+    selectEvent} --> will select the event
+
+     */
+
+    //endregion
     return (
         <Segment.Group>
 
@@ -30,8 +41,8 @@ const EventListItem = ({event: {description, attendees, date, hostPhotoURL, host
 
             <Segment secondary>
                 <List horizontal>
-                    {attendees.map(attendee =>(
-                    <EventListAttendee key={attendee.id} attendee={attendee} />
+                    {attendees.map(attendee => (
+                        <EventListAttendee key={attendee.id} attendee={attendee}/>
 
                     ))}
 
@@ -41,7 +52,9 @@ const EventListItem = ({event: {description, attendees, date, hostPhotoURL, host
             <Segment clearing>
                 {/*clearning means button and items wont go outside the boundarites*/}
                 <div> {description}</div>
-                <Button color={'teal'} floated={'right'} content="view" ></Button>
+                <Button
+                    onClick={() => selectEvent({description, attendees, date, hostPhotoURL, hostedBy, title, venue})}
+                    color={'teal'} floated={'right'} content="view"></Button>
             </Segment>
 
 
