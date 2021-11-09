@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Button, Form, Header, Segment} from "semantic-ui-react";
+import cuid from "cuid";
 
-const EventForm = ({setFormOpen, setEvents}) => {
+const EventForm = ({setFormOpen, setEvents, createEvent}) => {
 
 
     //region
@@ -13,7 +14,7 @@ const EventForm = ({setFormOpen, setEvents}) => {
         venue: '',
         date: '',
     }
-  //endregion
+    //endregion
 
     const [values, setValues] = useState(initialValues); // means this will be the inital values.
 
@@ -21,11 +22,26 @@ const EventForm = ({setFormOpen, setEvents}) => {
 
     //region handleFormSubmit() --> submits the form
     const handleFormSubmit = () => {
-        console.log(values)
+        createEvent({
+            ...values, id: cuid(),
+            hostedBy: 'Bob',
+            attendees: [],
+            hostPhotoURL: '/assets/user.png'
+        })
+        //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
+        /*
+        {..values} --> means ...values will be broken down
+        id:cuid() --> means will get the id for this
+        hostedBy : as for now its empty
+        attendees:[] this is an empty array means no one is attending here.
+         */
+        //endregion
+        setFormOpen(false);
+
     }
     //endregion
 
- //region  handleInputChange(e)==> sets what input change for the file
+    //region  handleInputChange(e)==> sets what input change for the file
     const handleInputChange = (e) => {
         const {name, value} = e.target
         //name and value are being destrucutred here from event
