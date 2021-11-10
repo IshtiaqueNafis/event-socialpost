@@ -37,18 +37,21 @@ const App = () => {
 
     return (
         <>
-            <NavBar setFormOpen={handleCreateFormOpen}/>
-            <Container className="main">
+            <Route exact path={'/'} component={HomePage}/>
+            <Route path={'/(.+)'} render={() => (
+               // path={'/(.+)'} --> means follow any path after render
+                <>
+                    <NavBar setFormOpen={handleCreateFormOpen}/>
+                    <Container className="main">
+                        <Route exact path={'/events'} component={EventDashBoard}/>
+                        <Route path={'/events/:id'} component={EventDetailedPage}/>
+                        <Route path={'/createEvent'} component={EventForm}/>
+                    </Container>
+                </>
 
 
-                    <Route exact path={'/'} component={HomePage}/>
-                    <Route exact path={'/events'} component={EventDashBoard}/>
-                    <Route path={'/events/:id'} component={EventDetailedPage}/>
-                    <Route path={'/createEvent'} component={EventForm}/>
+            )}/>
 
-
-
-            </Container>
         </>
     );
 };
