@@ -2,17 +2,18 @@ import React, {useState} from 'react';
 import {Button, Form, Header, Segment} from "semantic-ui-react";
 import cuid from "cuid";
 
-const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvents}) => {
+const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvent, updateEvent}) => {
 //region ***{setFormOpen, setEvents, createEvent, selectedEvents}***
     /*
     setFormOpen --> setthe state of the form so it can be shown
     createEvent --> creates a new event
     selectedEvents--> select a single event
+    updateEvent --> updates the event.
      */
     //endregion
 
     //region initialValues
-    const initialValues = selectedEvents ?? {
+    const initialValues = selectedEvent ?? {
         title: '',
         category: '',
         description: '',
@@ -31,12 +32,14 @@ const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvents}) => {
 
     //region handleFormSubmit() --> submits the form
     const handleFormSubmit = () => {
-        createEvent({
-            ...values, id: cuid(),
-            hostedBy: 'Bob',
-            attendees: [],
-            hostPhotoURL: '/assets/user.png'
-        })
+        selectedEvent ?
+            updateEvent({...selectedEvent, ...values}) : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
+            createEvent({
+                ...values, id: cuid(),
+                hostedBy: 'Bob',
+                attendees: [],
+                hostPhotoURL: '/assets/user.png'
+            })
         //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
         /*
         {..values} --> means ...values will be broken down
@@ -67,7 +70,7 @@ const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvents}) => {
 
     return (
         <Segment clearing>
-            <Header content={'Create new Event'}/>
+            <Header content={selectedEvent ? 'Edit the event' : 'Create new Event'}/>
             <Form>
 
                 <Form.Field>

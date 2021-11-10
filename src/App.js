@@ -6,13 +6,13 @@ import NavBar from "./features/nav/NavBar";
 const App = () => {
     //region states
     const [formOpen, setFormOpen] = useState(false); // this sets true or false whther the form is going to be opened.
-    const [selectedEvents, setSelectedEvents] = useState(null); // set the selected Event
+    const [selectedEvent, setSelectedEvent] = useState(null); // set the selected Event
     //endregion
 
     //region functions   handleSelectEvent(event), handleCreateFormOpen()
     //region handleSelectEvent(event) --> set selected events
     const handleSelectEvent = (event) => {
-        setSelectedEvents(event);
+        setSelectedEvent(event);
         setFormOpen(true);
     }
     //endregion
@@ -20,8 +20,8 @@ const App = () => {
 
     //region handleCreateFormOpen() --> handles events and form opening
     const handleCreateFormOpen = () => {
-        setSelectedEvents(null);
-        setFormOpen(false);
+        setSelectedEvent(null);
+        setFormOpen(true);
     }
     //endregion
 
@@ -34,7 +34,7 @@ const App = () => {
                     formOpen={formOpen} //pass the form state
                     setFormOpen={setFormOpen} // manipulate form state for form
                     selectEvent={handleSelectEvent} // --> will setSelectEvents to null and setFormOpen to false
-                    selectedEvents={selectedEvents} // pass the state for selected events
+                    selectedEvent={selectedEvent} // pass the state for selected events
                 />
             </Container>
         </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import EventListItem from "./EventListItem";
 
-const EventList = ({events,selectEvent}) => {
+const EventList = ({events,selectEvent,deleteEvent}) => {
     //region ***{events,selectEvent}***
     /*
     events --> is an array with all the data
@@ -17,6 +17,7 @@ const EventList = ({events,selectEvent}) => {
                     key={event.id}
                     event={event}
                     selectEvent={selectEvent}
+                    deleteEvent={deleteEvent}
 
                 />
 

@@ -2,14 +2,10 @@ import React from 'react';
 import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 
-const EventListItem = ({
-                           event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue},
-                           selectEvent
-                       }) => {
-    //region *** event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue},
-    //                            selectEvent}
+const EventListItem = ({event, selectEvent, deleteEvent}) => {
+    //region *** event,selectEvent}
     /*event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue} --> is the event object
-    selectEvent} --> will select the event
+    selectEvent} --> will select the event is amethod
 
      */
 
@@ -20,11 +16,11 @@ const EventListItem = ({
             <Segment>
                 <Item.Group>
                     <Item>
-                        <Item.Image size="tiny" circular src={hostPhotoURL}/>
+                        <Item.Image size="tiny" circular src={event.hostPhotoURL}/>
                         <Item.Content>
-                            <Item.Header content={title}/>
+                            <Item.Header content={event.title}/>
                             <Item.Description>
-                                Hosted by {hostedBy}
+                                Hosted by {event.hostedBy}
                             </Item.Description>
                         </Item.Content>
                     </Item>
@@ -33,15 +29,15 @@ const EventListItem = ({
 
             <Segment>
                <span>
-                   <Icon name={'clock'}/>{date}
-                   <Icon name={'marker'}/>{venue}
+                   <Icon name={'clock'}/>{event.date}
+                   <Icon name={'marker'}/>{event.venue}
 
                </span>
             </Segment>
 
             <Segment secondary>
                 <List horizontal>
-                    {attendees.map(attendee => (
+                    {event.attendees.map(attendee => (
                         <EventListAttendee key={attendee.id} attendee={attendee}/>
 
                     ))}
@@ -51,10 +47,14 @@ const EventListItem = ({
 
             <Segment clearing>
                 {/*clearning means button and items wont go outside the boundarites*/}
-                <div> {description}</div>
+                <div> {event.description}</div>
                 <Button
-                    onClick={() => selectEvent({description, attendees, date, hostPhotoURL, hostedBy, title, venue})}
-                    color={'teal'} floated={'right'} content="view"></Button>
+                    onClick={() => selectEvent(event)}
+                    color={'teal'} floated={'right'} content="view"/>
+                <Button
+                    onClick={() => deleteEvent(event.id)}
+                    color={'red'} floated={'right'} content={'Delete'}
+                />
             </Segment>
 
 

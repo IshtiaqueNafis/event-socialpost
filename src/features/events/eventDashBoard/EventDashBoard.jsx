@@ -4,7 +4,7 @@ import EventList from "./EventList";
 import EventForm from "../eventForm/EventForm";
 import {sampleData} from "../../../app/api/sampleData";
 
-const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvents}) => {
+const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvent}) => {
     //region ***{formOpen, setFormOpen, selectEvent, selectedEvents} parameters explained ***
     /*
                     formOpen--> pass the form state
@@ -21,8 +21,24 @@ const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvents}) =>
     //endregion
 
 
-    //region functions ***handleCreateEvent(event)***
+    //region functions ***handleCreateEvent(event),handleUpdatedEvent(event),***
+    //region handleCreateEvent(event) --> create events
     const handleCreateEvent = (event) => setEvents([...events, event])
+    //endregion
+    //region handleUpdatedEvent --> (updateEvent)
+    const handleUpdatedEvent = (updatedEvent) => {
+        setEvents(events.map // note that events comes from events from the  const [events, setEvents] = useState(sampleData);
+            (event => event.id === updatedEvent.id  // pass in the updated event
+                ? updatedEvent // updateEvent return
+                : event)) // else returns event in general
+        selectEvent(null); // as the data formatting is done
+    }
+    //endregion
+
+    //region handleDeleteEvent
+    const handleDeleteEvent = (eventId) => setEvents(events.filter(event => event.id !== eventId)); // look for events and delte it.
+    //endregion
+
     // [...events, event] --> it will return new object with array.
     //endregion
 
@@ -30,7 +46,9 @@ const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvents}) =>
         <Grid>
             <Grid.Column width={10}>
                 <EventList events={events} // passed the events up here
-                           selectEvent={selectEvent}/>
+                           selectEvent={selectEvent}
+                           deleteEvent={handleDeleteEvent} // this will delete event
+                />
             </Grid.Column>
             <Grid.Column width={6}>
                 {formOpen
@@ -38,7 +56,11 @@ const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvents}) =>
                     setFormOpen={setFormOpen} // manipulate form state for form
                     setEvents={setEvents} // this will show all the added events from the data
                     createEvent={handleCreateEvent} // this creates a new event
-                    selectedEvents={selectedEvents} // pass the state for selected events
+                    selectedEvent={selectedEvent} // pass the state for selected events
+                    key={selectedEvent ? selectedEvent.id : null}
+                    updateEvent={handleUpdatedEvent} // this updated the event
+
+
 
                 />}
             </Grid.Column>
