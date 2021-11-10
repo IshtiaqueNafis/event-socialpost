@@ -1,9 +1,9 @@
 import React from 'react';
 import {Grid} from "semantic-ui-react";
 import EventDetailedHeader from "./EventDetailedHeader";
-import EventDetailedInfo from "./EvenDetailedInfo";
+import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
-import EventDetailedSideBar from "./EventDetailSideBar";
+import EventDetailedSideBar from "./EventDetailedSideBar";
 
 const EventDetailedPage = () => {
     return (
