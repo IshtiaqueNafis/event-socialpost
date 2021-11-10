@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
+import {Link} from "react-router-dom";
 
 const EventListItem = ({event, selectEvent, deleteEvent}) => {
     //region *** event,selectEvent}
@@ -51,7 +52,8 @@ const EventListItem = ({event, selectEvent, deleteEvent}) => {
                 {/*clearning means button and items wont go outside the boundarites*/}
                 <div> {event.description}</div>
                 <Button
-                    onClick={() => selectEvent(event)}
+                    as={Link} to={`/events/${event.id}`}
+
                     color={'teal'} floated={'right'} content="view"/>
                 <Button
                     onClick={() => deleteEvent(event.id)}
