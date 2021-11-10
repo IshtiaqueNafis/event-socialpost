@@ -4,16 +4,7 @@ import EventList from "./EventList";
 import EventForm from "../eventForm/EventForm";
 import {sampleData} from "../../../app/api/sampleData";
 
-const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvent}) => {
-    //region ***{formOpen, setFormOpen, selectEvent, selectedEvents} parameters explained ***
-    /*
-                    formOpen--> pass the form state
-                    setFormOpen()--> manipulate form state for form to be closed or open
-                    selectEvent(event)--> takes a event parameter and sets the event.
-                    selectedEvent--> pass the state for selected events
-     */
-
-    //endregion
+const EventDashBoard = () => {
 
 
     //region ***state***
@@ -38,7 +29,7 @@ const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvent}) => 
             (event => event.id === updatedEvent.id  // pass in the updated event
                 ? updatedEvent // updateEvent return
                 : event)) // else returns event in general
-        selectEvent(null); // as the data formatting is done
+         // as the data formatting is done
     }
     //endregion
 
@@ -53,22 +44,12 @@ const EventDashBoard = ({formOpen, setFormOpen, selectEvent, selectedEvent}) => 
         <Grid>
             <Grid.Column width={10}>
                 <EventList events={events} // passed the events up here
-                           selectEvent={selectEvent} // selects a event
+                            // selects a event
                            deleteEvent={handleDeleteEvent} // this will delete event
                 />
             </Grid.Column>
             <Grid.Column width={6}>
-                {formOpen
-                && <EventForm
-                    setFormOpen={setFormOpen} // manipulate form state for form
-                    setEvents={setEvents} // this will show all the added events from the data
-                    createEvent={handleCreateEvent} // this creates a new event
-                    selectedEvent={selectedEvent} // pass the state for selected events
-                    key={selectedEvent ? selectedEvent.id : null}
-                    updateEvent={handleUpdatedEvent} // this updated the event
-
-
-                />}
+                <h2>EventFilters</h2>
             </Grid.Column>
         </Grid>
     );
