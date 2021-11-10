@@ -1,12 +1,26 @@
 import React, {useState} from 'react';
 import {Button, Container, Menu} from "semantic-ui-react";
-import {NavLink} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import SignedOutMenu from "./SignedOutMenu";
 import SignInMenu from "./SignInMenu";
 
 const NavBar = ({setFormOpen}) => {
-    const [authenticated, setAuthenticated] = useState(false);
 
+    //region ***states***
+    const history = useHistory(); // this lets the componenet to have history as Navbar does not have router component.
+    const [authenticated, setAuthenticated] = useState(false);
+    //endregion
+
+    //region functions -->
+
+    //region ***handleSignOut()***
+    const handleSignOut = () => {
+        setAuthenticated(false);
+        history.push('/'); // push the user to home menu
+    }
+    //endregion
+
+    //endregion
     return (
         <Menu inverted fixed={'top'}>
             <Container>
@@ -20,7 +34,7 @@ const NavBar = ({setFormOpen}) => {
                 <Menu.Item as={NavLink} to={'/createEvent'}>
                     <Button positive inverted content={'Create Event'}/>
                 </Menu.Item>}
-                {authenticated ? <SignInMenu setAuthenticated={setAuthenticated}/> :
+                {authenticated ? <SignInMenu signOut={handleSignOut}/> :
                     <SignedOutMenu setAuthenticated={setAuthenticated}/>}
 
 

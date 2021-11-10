@@ -2,6 +2,11 @@ import React from 'react';
 import {Button, Menu} from "semantic-ui-react";
 
 const SignedOutMenu = ({setAuthenticated}) => {
+    //region ** props explained***
+    /*
+    setAuthenticated(boolean) --> signs in sign out user
+     */
+    // endregion
     return (
 
             <Menu.Item position="right">
