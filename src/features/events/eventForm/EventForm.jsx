@@ -2,17 +2,17 @@ import React, {useState} from 'react';
 import {Button, Form, Header, Segment} from "semantic-ui-react";
 import cuid from "cuid";
 
-const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvent, updateEvent}) => {
+const EventForm = ({setFormOpen, createEvent, selectedEvent, updateEvent}) => {
 //region ***{setFormOpen, setEvents, createEvent, selectedEvents}***
     /*
-    setFormOpen --> setthe state of the form so it can be shown
-    createEvent --> creates a new event
-    selectedEvents--> select a single event
-    updateEvent --> updates the event.
+    setFormOpen(boolean) -->  manipulate form state for form to be closed or open by using true or false.
+    createEvent(event) --> creates a new event
+    selectedEvent (event)--> select a single event
+    updateEvent(event) --> updates the event.
      */
     //endregion
 
-    //region initialValues
+    //region ***initialValues***
     const initialValues = selectedEvent ?? {
         title: '',
         category: '',
@@ -24,15 +24,15 @@ const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvent, updateEv
     //selectedEvents ?? --> means if selected event is not null pick the Selected Events if not use the selected event.
     //endregion
 
-    //region state
+    //region ***state***
     const [values, setValues] = useState(initialValues); // means this will be the inital values.
     //endregion
 
-    //region methods handleFormSubmit(), handleInputChange(e)
+    //region methods ***handleFormSubmit(), handleInputChange(e)***
 
     //region handleFormSubmit() --> submits the form
     const handleFormSubmit = () => {
-        selectedEvent ?
+        selectedEvent ? // cehcks if selected event is a prop
             updateEvent({...selectedEvent, ...values}) : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
             createEvent({
                 ...values, id: cuid(),
@@ -56,9 +56,9 @@ const EventForm = ({setFormOpen, setEvents, createEvent, selectedEvent, updateEv
     //region  handleInputChange(e)==> sets what input change for the file
     const handleInputChange = (e) => {
         const {name, value} = e.target
-        //name and value are being destrucutred here from event
+        //name and value are being destructed here from event
         setValues({...values, [name]: value})
-        //region
+        //region ***setValues({...values, [name]: value})***
         // ... values --> means copy all the value s
         // [name]:value means set the value [name] lets it be dynamic
         //endregion

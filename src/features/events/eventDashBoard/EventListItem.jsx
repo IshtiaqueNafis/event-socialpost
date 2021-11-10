@@ -5,7 +5,9 @@ import EventListAttendee from "./EventListAttendee";
 const EventListItem = ({event, selectEvent, deleteEvent}) => {
     //region *** event,selectEvent}
     /*event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue} --> is the event object
-    selectEvent} --> will select the event is amethod
+     selectEvent(event) --> selectes a single event
+     deleteEvent(id) --> deletes a single event based on id
+
 
      */
 
