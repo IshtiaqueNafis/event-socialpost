@@ -5,12 +5,13 @@ import './style.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.render(
-
-    <App />,
-
-  document.getElementById('root')
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>,
+    document.getElementById('root')
 );
 
 

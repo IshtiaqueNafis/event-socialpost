@@ -3,6 +3,11 @@ import {Container} from "semantic-ui-react";
 import EventDashBoard from "./features/events/eventDashBoard/EventDashBoard";
 import NavBar from "./features/nav/NavBar";
 
+import HomePage from "./features/home/HomePage";
+import EventDetailedPage from "./features/events/eventsDetailed/EventDetailedPage";
+import EventForm from "./features/events/eventForm/EventForm";
+import {Route, Switch} from "react-router-dom";
+
 const App = () => {
 
     //region ***states***
@@ -34,12 +39,15 @@ const App = () => {
         <>
             <NavBar setFormOpen={handleCreateFormOpen}/>
             <Container className="main">
-                <EventDashBoard
-                    formOpen={formOpen} //pass the form state
-                    setFormOpen={setFormOpen} // manipulate form state for form
-                    selectEvent={handleSelectEvent} // --> will setSelectEvents to null and setFormOpen to false
-                    selectedEvent={selectedEvent} // pass the state for selected events
-                />
+
+
+                    <Route exact path={'/'} component={HomePage}/>
+                    <Route exact path={'/events'} component={EventDashBoard}/>
+                    <Route path={'/events/:id'} component={EventDetailedPage}/>
+                    <Route path={'/createEvent'} component={EventForm}/>
+
+
+
             </Container>
         </>
     );
