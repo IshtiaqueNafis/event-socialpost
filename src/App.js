@@ -7,6 +7,7 @@ import HomePage from "./features/home/HomePage";
 import EventDetailedPage from "./features/events/eventsDetailed/EventDetailedPage";
 import EventForm from "./features/events/eventForm/EventForm";
 import {Route} from "react-router-dom";
+import Sandbox from "./features/sandBox/Sandbox";
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
                     <NavBar/>
                     <Container className="main">
                         <Route exact path={'/events'} component={EventDashBoard}/>
+                        <Route exact path={'/sandBox'} component={Sandbox}/>
                         <Route path={'/events/:id'} component={EventDetailedPage}/>
                         <Route path={['/createEvent', 'manage/:id']} component={EventForm}/>
                         {/*  path={['/createEvent','manage/:id']} means either of this two path will work    */}
