@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {createEvent, updateEvent} from "../eventRedux/eventActions";
 
-const EventForm = ({match}) => {
+const EventForm = ({match, history}) => {
 
 
     //region ***initialValues***
@@ -34,7 +34,7 @@ const EventForm = ({match}) => {
             dispatch(updateEvent({...selectedEvent, ...values}))
 
             : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
-            dispatch(  createEvent({
+            dispatch(createEvent({
                 ...values, id: cuid(),
                 hostedBy: 'Bob',
                 attendees: [],
@@ -48,7 +48,8 @@ const EventForm = ({match}) => {
         attendees:[] this is an empty array means no one is attending here.
          */
         //endregion
-        
+        history.push('/events')
+
 
     }
     //endregion
