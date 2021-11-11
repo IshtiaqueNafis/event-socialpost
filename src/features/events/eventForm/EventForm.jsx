@@ -2,18 +2,15 @@ import React, {useState} from 'react';
 import {Button, Form, Header, Segment} from "semantic-ui-react";
 import cuid from "cuid";
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {createEvent, updateEvent} from "../eventRedux/eventActions";
 
-const EventForm = ({setFormOpen, createEvent, selectedEvent, updateEvent}) => {
-//region ***{setFormOpen, setEvents, createEvent, selectedEvents}***
-    /*
-    setFormOpen(boolean) -->  manipulate form state for form to be closed or open by using true or false.
-    createEvent(event) --> creates a new event
-    selectedEvent (event)--> select a single event
-    updateEvent(event) --> updates the event.
-     */
-    //endregion
+const EventForm = ({match}) => {
+
 
     //region ***initialValues***
+    const selectedEvent = useSelector(state => state.event.events.find(e => e.id === match.params.id)); // geeting the event Id
+    const dispatch = useDispatch();
     const initialValues = selectedEvent ?? {
         title: '',
         category: '',
@@ -34,13 +31,15 @@ const EventForm = ({setFormOpen, createEvent, selectedEvent, updateEvent}) => {
     //region handleFormSubmit() --> submits the form
     const handleFormSubmit = () => {
         selectedEvent ? // cehcks if selected event is a prop
-            updateEvent({...selectedEvent, ...values}) : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
-            createEvent({
+            dispatch(updateEvent({...selectedEvent, ...values}))
+
+            : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
+            dispatch(  createEvent({
                 ...values, id: cuid(),
                 hostedBy: 'Bob',
                 attendees: [],
                 hostPhotoURL: '/assets/user.png'
-            })
+            }))
         //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
         /*
         {..values} --> means ...values will be broken down
@@ -49,7 +48,7 @@ const EventForm = ({setFormOpen, createEvent, selectedEvent, updateEvent}) => {
         attendees:[] this is an empty array means no one is attending here.
          */
         //endregion
-        setFormOpen(false);
+        
 
     }
     //endregion

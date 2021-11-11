@@ -23,7 +23,7 @@ const App = () => {
                         <Route exact path={'/events'} component={EventDashBoard}/>
                         <Route exact path={'/sandBox'} component={Sandbox}/>
                         <Route path={'/events/:id'} component={EventDetailedPage}/>
-                        <Route path={['/createEvent', 'manage/:id']} component={EventForm}/>
+                        <Route path={['/createEvent', '/manage/:id']} component={EventForm}/>
                         {/*  path={['/createEvent','manage/:id']} means either of this two path will work    */}
                     </Container>
                 </>

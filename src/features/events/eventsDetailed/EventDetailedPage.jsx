@@ -29,7 +29,7 @@ const EventDetailedPage = ({match}) => {
                 <EventDetailedChat/>
             </Grid.Column>
             <Grid.Column width={6}>
-                <EventDetailedSideBar attendes={event.attendees}/>
+                <EventDetailedSideBar attendees={event.attendees}/>
             </Grid.Column>
 
         </Grid>

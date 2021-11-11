@@ -2,17 +2,19 @@ import React from 'react';
 import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {deleteEvent} from "../eventRedux/eventActions";
 
-const EventListItem = ({event, selectEvent, deleteEvent}) => {
+const EventListItem = ({event}) => {
     //region *** event,selectEvent}
     /*event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue} --> is the event object
-     selectEvent(event) --> selectes a single event
-     deleteEvent(id) --> deletes a single event based on id
-
 
      */
 
     //endregion
+    const dispatch = useDispatch();
+
+
     return (
         <Segment.Group>
 
@@ -53,10 +55,9 @@ const EventListItem = ({event, selectEvent, deleteEvent}) => {
                 <div> {event.description}</div>
                 <Button
                     as={Link} to={`/events/${event.id}`}
-
                     color={'teal'} floated={'right'} content="view"/>
                 <Button
-                    onClick={() => deleteEvent(event.id)}
+                    onClick={() => dispatch(deleteEvent(event.id))}
                     color={'red'} floated={'right'} content={'Delete'}
                 />
             </Segment>
