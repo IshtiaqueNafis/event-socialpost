@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import {Button, FormField, Header, Segment} from "semantic-ui-react";
-import cuid from "cuid";
-import {Field, Form, Formik} from 'formik';
+import React from 'react';
+import {Button, FormField, Header, Label, Segment} from "semantic-ui-react";
+import {ErrorMessage, Field, Form, Formik} from 'formik';
+import * as Yup from 'yup';
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {createEvent, updateEvent} from "../eventRedux/eventActions";
+
 
 const EventForm = ({match, history}) => {
 
@@ -23,62 +23,54 @@ const EventForm = ({match, history}) => {
     //selectedEvents ?? --> means if selected event is not null pick the Selected Events if not use the selected event.
     //endregion
 
-    //region ***state***
-    const [values, setValues] = useState(initialValues); // means this will be the inital values.
+    //region ***ValidationSchema --> Yup object to validate forms***
+    const validationSchema = Yup.object({
+
+        title: Yup.string().required('You Must provide a title')// this means required and and a string is required.
+
+    })
     //endregion
 
     //region methods ***handleFormSubmihandleChange***
 
     //region handleFormSubmit() --> submits the form
-    const handleFormSubmit = () => {
-        selectedEvent ? // cehcks if selected event is a prop
-            dispatch(updateEvent({...selectedEvent, ...values}))
-
-            : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
-            dispatch(createEvent({
-                ...values, id: cuid(),
-                hostedBy: 'Bob',
-                attendees: [],
-                hostPhotoURL: '/assets/user.png'
-            }))
-        //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
-        /*
-        {..values} --> means ...values will be broken down
-        id:cuid() --> means will get the id for this
-        hostedBy : as for now its empty
-        attendees:[] this is an empty array means no one is attending here.
-         */
-        //endregion
-        history.push('/events')
-
-
-    }
+    // const handleFormSubmit = () => {
+    //     selectedEvent ? // cehcks if selected event is a prop
+    //         dispatch(updateEvent({...selectedEvent, ...values}))
+    //
+    //         : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
+    //         dispatch(createEvent({
+    //             ...values, id: cuid(),
+    //             hostedBy: 'Bob',
+    //             attendees: [],
+    //             hostPhotoURL: '/assets/user.png'
+    //         }))
+    //     //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
+    //     /*
+    //     {..values} --> means ...values will be broken down
+    //     id:cuid() --> means will get the id for this
+    //     hostedBy : as for now its empty
+    //     attendees:[] this is an empty array means no one is attending here.
+    //      */
+    //     //endregion
+    //     history.push('/events')
+    //
+    //
+    // }
     //endregion
 
-    //reghandleChange==> sets what input change for the file
-    const chandleChange = (e) => {
-        const {name, value} = e.target
-        //name and value are being destructed here from event
-        setValues({...values, [name]: value})
-        //region ***setValues({...values, [name]: value})***
-        // ... values --> means copy all the value s
-        // [name]:value means set the value [name] lets it be dynamic
-        //endregion
-
-    }
-    //endregion
-
-//endregion
 
     return (
         <Segment clearing>
             <Header content={selectedEvent ? 'Edit the event' : 'Create new Event'}/>
             <Formik initialValues={initialValues} // this is the value for inital items for the forms
+                    validationSchema={validationSchema}
                     onSubmit={values => console.log(values)}>
                 <Form className={'ui form'}>
                     <FormField>
                         <Field name={'title'}
                                placeholder={'Enter Title'}/>
+                        <ErrorMessage name={'title'} render={error => <Label basic color={'red'} content={error}/>}/>
                     </FormField>
                     <FormField>
                         <Field name={'category'}
@@ -108,7 +100,7 @@ const EventForm = ({match, history}) => {
                     </FormField>
 
 
-                    <Button type="submit" floated={'right'} onClick={handleFormSubmit} positive content={'Submit'}/>
+                    <Button type="submit" floated={'right'} positive content={'Submit'}/>
                     <Button as={Link} to={'/events'} type="submit" floated={'right'} content={'Cancel'}/>
                 </Form>
 
