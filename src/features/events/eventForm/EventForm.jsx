@@ -1,9 +1,10 @@
 import React from 'react';
-import {Button, FormField, Header, Label, Segment} from "semantic-ui-react";
-import {ErrorMessage, Field, Form, Formik} from 'formik';
+import {Button, FormField, Header, Segment} from "semantic-ui-react";
+import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import MyTextInput from "../../../app/common/form/MyTextInput";
 
 
 const EventForm = ({match, history}) => {
@@ -67,11 +68,7 @@ const EventForm = ({match, history}) => {
                     validationSchema={validationSchema}
                     onSubmit={values => console.log(values)}>
                 <Form className={'ui form'}>
-                    <FormField>
-                        <Field name={'title'}
-                               placeholder={'Enter Title'}/>
-                        <ErrorMessage name={'title'} render={error => <Label basic color={'red'} content={error}/>}/>
-                    </FormField>
+                    <MyTextInput name="title" placeholder="Event title"/>
                     <FormField>
                         <Field name={'category'}
                                placeholder={'Category'}/>
