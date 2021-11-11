@@ -1,21 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Grid} from "semantic-ui-react";
 import EventList from "./EventList";
-import EventForm from "../eventForm/EventForm";
-import {sampleData} from "../../../app/api/sampleData";
+import {useSelector} from "react-redux";
 
 const EventDashBoard = () => {
 
+    const {events} = useSelector(state => state.event)
 
-    //region ***state***
-    const [events, setEvents] = useState(sampleData);  // this creates the sample data for the events.
-    //endregion
 
 
     //region functions ***handleCreateEvent(event),handleUpdatedEvent(event),***
 
     //region handleCreateEvent(event) --> create events
-    const handleCreateEvent = (event) => setEvents([...events, event])
+    // const handleCreateEvent = (event) => setEvents([...events, event])
     // setEvents([...events, event])
     /*
     ...events --> spread the current events on array
@@ -25,16 +22,12 @@ const EventDashBoard = () => {
 
     //region handleUpdatedEvent --> (updateEvent)
     const handleUpdatedEvent = (updatedEvent) => {
-        setEvents(events.map // note that events comes from events from the  const [events, setEvents] = useState(sampleData);
-            (event => event.id === updatedEvent.id  // pass in the updated event
-                ? updatedEvent // updateEvent return
-                : event)) // else returns event in general
-         // as the data formatting is done
+
     }
     //endregion
 
     //region handleDeleteEvent(eventID) --> takes an eventID and deletes it
-    const handleDeleteEvent = (eventId) => setEvents(events.filter(event => event.id !== eventId)); // look for events and delte it.
+    const handleDeleteEvent = (eventId) => {} // look for events and delte it.
     //endregion
 
     // [...events, event] --> it will return new object with array.
@@ -44,7 +37,7 @@ const EventDashBoard = () => {
         <Grid>
             <Grid.Column width={10}>
                 <EventList events={events} // passed the events up here
-                            // selects a event
+                    // selects a event
                            deleteEvent={handleDeleteEvent} // this will delete event
                 />
             </Grid.Column>
