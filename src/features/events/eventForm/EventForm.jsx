@@ -1,10 +1,12 @@
 import React from 'react';
-import {Button, FormField, Header, Segment} from "semantic-ui-react";
-import {Field, Form, Formik} from 'formik';
+import {Button, Header, Segment} from "semantic-ui-react";
+import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import MyTextInput from "../../../app/common/form/MyTextInput";
+import {createEvent, updateEvent} from "../eventRedux/eventActions";
+import cuid from "cuid";
 
 
 const EventForm = ({match, history}) => {
@@ -27,74 +29,50 @@ const EventForm = ({match, history}) => {
     //region ***ValidationSchema --> Yup object to validate forms***
     const validationSchema = Yup.object({
 
-        title: Yup.string().required('You Must provide a title')// this means required and and a string is required.
+        title: Yup.string().required('You Must provide a title'),// this means required and and a string is required.
+        category: Yup.string().required('You Must provide a Category'),// this means required and a string isand a string is required.
+        description: Yup.string().required(),
+        city: Yup.string().required(),
+        venue: Yup.string().required(),
+        date: Yup.string().required()
 
     })
-    //endregion
-
-    //region methods ***handleFormSubmihandleChange***
-
-    //region handleFormSubmit() --> submits the form
-    // const handleFormSubmit = () => {
-    //     selectedEvent ? // cehcks if selected event is a prop
-    //         dispatch(updateEvent({...selectedEvent, ...values}))
-    //
-    //         : // ({...selectedEvent, ...values}) --> ...selectedEvent will not be lost original then pass the ...values means it will be updated
-    //         dispatch(createEvent({
-    //             ...values, id: cuid(),
-    //             hostedBy: 'Bob',
-    //             attendees: [],
-    //             hostPhotoURL: '/assets/user.png'
-    //         }))
-    //     //region {...values, id: cuid(), hostedBy: 'Bob', attendees: []}
-    //     /*
-    //     {..values} --> means ...values will be broken down
-    //     id:cuid() --> means will get the id for this
-    //     hostedBy : as for now its empty
-    //     attendees:[] this is an empty array means no one is attending here.
-    //      */
-    //     //endregion
-    //     history.push('/events')
-    //
-    //
-    // }
     //endregion
 
 
     return (
         <Segment clearing>
-            <Header content={selectedEvent ? 'Edit the event' : 'Create new Event'}/>
+
             <Formik initialValues={initialValues} // this is the value for inital items for the forms
                     validationSchema={validationSchema}
-                    onSubmit={values => console.log(values)}>
+                    onSubmit={(values) => {
+                        //values is part of formikValue
+                         selectedEvent ? // cehcks if selected event is a not null
+                            dispatch(updateEvent({...selectedEvent, ...values})) // if it is not null then update it
+                            :
+                            dispatch(createEvent( //else dispatch to create event.
+                                {
+                                    ...values, id: cuid(),
+                                    hostedBy: 'Bob',
+                                    attendees: [],
+                                    hostPhotoURL: '/assets/user.png'
+                                }));
+
+
+                        history.push('/events')
+                    }
+                    }>
+
+
                 <Form className={'ui form'}>
+                    <Header sub color={'teal'} content={'Event Details'}/>
                     <MyTextInput name="title" placeholder="Event title"/>
-                    <FormField>
-                        <Field name={'category'}
-                               placeholder={'Category'}/>
-                    </FormField>
-
-                    <FormField>
-                        <Field name={'description'}
-                               placeholder={'Description'}/>
-                    </FormField>
-
-                    <FormField>
-                        <Field name={'city'}
-                               placeholder={'City'}/>
-                    </FormField>
-
-                    <FormField>
-                        <Field name={'venue'}
-                               placeholder={'Venue'}/>
-                    </FormField>
-
-                    <FormField>
-                        <Field name={'date'}
-                               placeholder={'Enter Date'}
-                               type="date"
-                        />
-                    </FormField>
+                    <MyTextInput name="Category" placeholder="Event Category"/>
+                    <MyTextInput name="description" placeholder="Description"/>
+                    <Header sub color={'teal'} content={'Event Location Details'}/>
+                    <MyTextInput name="city" placeholder="City"/>
+                    <MyTextInput name="venue" placeholder="Venue"/>
+                    <MyTextInput name="date" placeholder="Date" type="date"/>
 
 
                     <Button type="submit" floated={'right'} positive content={'Submit'}/>

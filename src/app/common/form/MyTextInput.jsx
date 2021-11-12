@@ -4,7 +4,10 @@ import {FormField, Label} from "semantic-ui-react";
 
 const MyTextInput = ({label, ...props}) => {
 
+    //region ***Field,Meta from UseField ****
     const [field, meta] = useField(props);
+    //endregion
+
 
     return (
         <FormField error={meta.touched && !!meta.error}>
