@@ -7,6 +7,10 @@ import {useDispatch, useSelector} from "react-redux";
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import {createEvent, updateEvent} from "../eventRedux/eventActions";
 import cuid from "cuid";
+import MyTextArea from "../../../app/common/form/MyTextArea";
+import MySelectInput from "../../../app/common/form/MySelectInput";
+import {categoryData} from "../../../app/api/categoryOptions";
+import MyDateInput from "../../../app/common/form/MyDateInput";
 
 
 const EventForm = ({match, history}) => {
@@ -47,7 +51,7 @@ const EventForm = ({match, history}) => {
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
                         //values is part of formikValue
-                         selectedEvent ? // cehcks if selected event is a not null
+                        selectedEvent ? // cehcks if selected event is a not null
                             dispatch(updateEvent({...selectedEvent, ...values})) // if it is not null then update it
                             :
                             dispatch(createEvent( //else dispatch to create event.
@@ -67,12 +71,19 @@ const EventForm = ({match, history}) => {
                 <Form className={'ui form'}>
                     <Header sub color={'teal'} content={'Event Details'}/>
                     <MyTextInput name="title" placeholder="Event title"/>
-                    <MyTextInput name="Category" placeholder="Event Category"/>
-                    <MyTextInput name="description" placeholder="Description"/>
+                    <MySelectInput name="category" placeholder="Event Category" options={categoryData}/>
+                    <MyTextArea name="description" placeholder="Description" rows={3}/>
                     <Header sub color={'teal'} content={'Event Location Details'}/>
                     <MyTextInput name="city" placeholder="City"/>
                     <MyTextInput name="venue" placeholder="Venue"/>
-                    <MyTextInput name="date" placeholder="Date" type="date"/>
+
+                    <MyDateInput name="date"
+                                 placeholderText="Date"
+                                 timeFormat={'HH:mm'} // HH and MM
+                                 showTimeSelect // means show time select
+                                 timeCaption={'time'} // show caption
+                                 dateFormat={'MMMM d,yyyy,h:mm a'} // dateFormat shows date informatted settings.
+                    />
 
 
                     <Button type="submit" floated={'right'} positive content={'Submit'}/>
