@@ -4,6 +4,7 @@ import EventListAttendee from "./EventListAttendee";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteEvent} from "../eventRedux/eventActions";
+import {format} from "date-fns";
 
 const EventListItem = ({event}) => {
     //region *** event,selectEvent}
@@ -34,7 +35,7 @@ const EventListItem = ({event}) => {
 
             <Segment>
                <span>
-                   <Icon name={'clock'}/>{event.date}
+                   <Icon name={'clock'}/> {format(event.date,'MMMM d, yyyy h:mm a') }
                    <Icon name={'marker'}/>{event.venue}
 
                </span>
