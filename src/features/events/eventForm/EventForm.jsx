@@ -67,28 +67,49 @@ const EventForm = ({match, history}) => {
                     }
                     }>
 
+                {({isSubmitting, dirty, isValid}) => (
+                    <Form className={'ui form'}>
+                        <Header sub color={'teal'} content={'Event Details'}/>
+                        <MyTextInput name="title" placeholder="Event title"/>
+                        <MySelectInput name="category" placeholder="Event Category" options={categoryData}/>
+                        <MyTextArea name="description" placeholder="Description" rows={3}/>
+                        <Header sub color={'teal'} content={'Event Location Details'}/>
+                        <MyTextInput name="city" placeholder="City"/>
+                        <MyTextInput name="venue" placeholder="Venue"/>
 
-                <Form className={'ui form'}>
-                    <Header sub color={'teal'} content={'Event Details'}/>
-                    <MyTextInput name="title" placeholder="Event title"/>
-                    <MySelectInput name="category" placeholder="Event Category" options={categoryData}/>
-                    <MyTextArea name="description" placeholder="Description" rows={3}/>
-                    <Header sub color={'teal'} content={'Event Location Details'}/>
-                    <MyTextInput name="city" placeholder="City"/>
-                    <MyTextInput name="venue" placeholder="Venue"/>
-
-                    <MyDateInput name="date"
-                                 placeholderText="Date"
-                                 timeFormat={'HH:mm'} // HH and MM
-                                 showTimeSelect // means show time select
-                                 timeCaption={'time'} // show caption
-                                 dateFormat={'MMMM d,yyyy,h:mm a'} // dateFormat shows date informatted settings.
-                    />
+                        <MyDateInput name="date"
+                                     placeholderText="Date"
+                                     timeFormat={'HH:mm'} // HH and MM
+                                     showTimeSelect // means show time select
+                                     timeCaption={'time'} // show caption
+                                     dateFormat={'MMMM d,yyyy,h:mm a'} // dateFormat shows date informatted settings.
+                        />
 
 
-                    <Button type="submit" floated={'right'} positive content={'Submit'}/>
-                    <Button as={Link} to={'/events'} type="submit" floated={'right'} content={'Cancel'}/>
-                </Form>
+                        <Button loading={isSubmitting} // this will load the screen
+                                disabled={!isValid || !dirty || isSubmitting}
+                            // region ***{!isValid || !dirty || isSubmitting} ***
+                            /*
+                            !isValid --> means fields are empty
+                            !dirty values are  deeply equal from initial values
+                            isSubmitting means submission is in progress.
+                             */
+
+                            //endregion
+
+                                type="submit" floated={'right'} positive content={'Submit'}/>
+                        <Button
+                            as={Link}
+                            to={'/events'}
+                            type="submit"
+                            floated={'right'}
+                            content={'Cancel'}
+                            disabled={isSubmitting}
+
+                        />
+                    </Form>
+
+                )}
 
             </Formik>
         </Segment>
