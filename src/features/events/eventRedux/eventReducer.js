@@ -17,7 +17,7 @@ export default function eventReducer(state = INITAL_STATE, {type, payload}) {
         case UPDATE_EVENT:
             return {
                 ...state,
-                events: [...state.events.filter(event => event.id !== payload.id), payload]
+                events: [...state.events.filter(event => event.id !== payload.event.id), payload]
                 //events: [...state.events.filter(event => event.id !== payload.id), payload]
                 // ...state.events.filter(event => event.id !== payload.id) --> payload.id comes from event.ID
             }

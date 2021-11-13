@@ -8,12 +8,14 @@ import EventDetailedPage from "./features/events/eventsDetailed/EventDetailedPag
 import EventForm from "./features/events/eventForm/EventForm";
 import {Route, useLocation} from "react-router-dom";
 import Sandbox from "./features/sandBox/Sandbox";
+import ModalManager from "./app/common/modals/ModalManager";
 
 const App = () => {
     const {key} = useLocation(); // updates the page
 
     return (
         <>
+            <ModalManager/>
             <Route exact path={'/'} component={HomePage}/>
             <Route path={'/(.+)'} render={() => (
                 // path={'/(.+)'} --> means follow any path after render
