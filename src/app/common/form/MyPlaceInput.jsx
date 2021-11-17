@@ -2,7 +2,7 @@ import React from 'react';
 import {useField} from "formik";
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import {FormField, Label, List, Segment} from "semantic-ui-react";
-import address from "address";
+
 
 const MyPlaceInput = ({label, options, ...props}) => {
     // options will be used for specifying search.

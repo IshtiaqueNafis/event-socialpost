@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng,} from 'react-places-autocomplete';
 
-export default function TestPlaceInput() {
+export default function TestPlaceInput({setLocation}) {
 
-    const [address, setAddress] = useState();
+    const [address, setAddress] = useState('');
 
     const handleChange = address => {
         setAddress(address);
@@ -12,7 +12,13 @@ export default function TestPlaceInput() {
     const handleSelect = address => {
         geocodeByAddress(address) // takes the address get atttuide and longtitude.
             .then(results => getLatLng(results[0])) // returns latitide and altitude.  
-            .then(latLng => console.log('Success', latLng))
+            .then(latLng => {
+                console.log('Success', latLng)
+                setLocation(latLng);
+
+            })
+
+
             .catch(error => console.error('Error', error));
         setAddress(address);
     };
