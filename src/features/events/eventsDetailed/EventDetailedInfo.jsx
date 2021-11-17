@@ -21,8 +21,8 @@ const EventDetailedInfo = ({event}) => {
                         <Icon name="calendar" size="large" color="teal"/>
                     </Grid.Column>
                     <Grid.Column width={15}>
-                        <span>{format(event.date,'MMMM d, yyyy h:mm a') }</span>
-                    {/* format(event.date,'MMMM d, yyyy h:mm a') this formats the date    */}
+                        <span>{format(event.date, 'MMMM d, yyyy h:mm a')}</span>
+                        {/* format(event.date,'MMMM d, yyyy h:mm a') this formats the date    */}
                     </Grid.Column>
                 </Grid>
             </Segment>
@@ -32,7 +32,7 @@ const EventDetailedInfo = ({event}) => {
                         <Icon name="marker" size="large" color="teal"/>
                     </Grid.Column>
                     <Grid.Column width={11}>
-                        <span>{event.venue}</span>
+                        <span>{event.venue.address}</span>
                     </Grid.Column>
                     <Grid.Column width={4}>
                         <Button color="teal" size="tiny" content="Show Map"/>

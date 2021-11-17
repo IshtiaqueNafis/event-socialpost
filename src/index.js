@@ -10,7 +10,7 @@ import {Provider} from "react-redux";
 import {configureStore} from "./redux/store/configureStore";
 import ScrollToTop from "./layout/ScrollToTop";
 
-const store = configureStore()
+const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>

@@ -2,6 +2,7 @@ import React from 'react';
 import {useField} from "formik";
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from "react-places-autocomplete";
 import {FormField, Label, List, Segment} from "semantic-ui-react";
+import address from "address";
 
 const MyPlaceInput = ({label, options, ...props}) => {
     // options will be used for specifying search.
@@ -27,11 +28,22 @@ const MyPlaceInput = ({label, options, ...props}) => {
     //endregion
 
 
+    //region ***handleBlur=(e)*** event handler when a user leaves the field
+    const handleBlur = (e) => {
+        field.onBlur(e)
+        if (!field.value.latLng) {
+            helpers.setValue({address: '', latLng: ''})
+        }
+    }
+
+
+    //endregion
+
     return (
 
         <PlacesAutocomplete
             value={field.value['address']} // address  helpers.setValue({address, latLng})) its coming from here.
-            onChange={value => helpers.setValue(value)} // set the value based on what user chooses.
+            onChange={value => helpers.setValue({address: value})} // set the value based on what user chooses.
             onSelect={value => handleSelect(value)} //select the value passed
             searchOptions={options} // options coming from optins.
         >
@@ -69,21 +81,23 @@ const MyPlaceInput = ({label, options, ...props}) => {
                  */
                 //endregion
 
+
                 <FormField error={meta.touched && !!meta.error}>
                     <label>{label}</label>
-                    <input {...getInputProps({name: field.name, ...props})}
+                    <input {...getInputProps({name: field.name, onBlur: e => handleBlur(e), ...props})}
 
                         //region
                         /*
                             field.name comes from field.value.
                             <input {...getInputProps({name: field.name, ...props})}
+                            name: is the property for nameField.
                             spreading the ...getInputProps and passing other properties here.
 
                          */
                         //endregoion
                     />
 
-                    {meta.touched && meta.error ? (<Label basic color={'red'}>{meta.error}</Label>) : null}
+                    {meta.touched && meta.error ? (<Label basic color={'red'}>{meta.error['address']}</Label>) : null}
 
                     {suggestions?.length > 0 && (
                         <Segment loading={loading}
