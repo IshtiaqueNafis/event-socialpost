@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css'
 import 'react-toastify/dist/ReactToastify.min.css'
+import 'react-calendar/dist/Calendar.css'
 import './style.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
