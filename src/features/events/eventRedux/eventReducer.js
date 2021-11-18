@@ -1,12 +1,21 @@
 import {sampleData} from "../../../app/api/sampleData";
-import {CREATE_EVENT, DELETE_EVENT, UPDATE_EVENT} from "./eventConstant";
+import {CREATE_EVENT, DELETE_EVENT, FETCH_EVENTS, UPDATE_EVENT} from "./eventConstant";
 
-const INITAL_STATE = {
-    events: sampleData
+const INITIAL_STATE = {
+    events: []
 }
-export default function eventReducer(state = INITAL_STATE, {type, payload}) {
+export default function eventReducer(state = INITIAL_STATE, {type, payload}) {
 // {type,payload} --> is being destrcured from action
     switch (type) {
+        case FETCH_EVENTS:
+            return {
+                ...state,
+                events: payload
+                // array of what ever is inside
+
+            }
+
+
         case CREATE_EVENT:
             return {
                 ...state,
