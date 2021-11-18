@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css'
+import 'react-toastify/dist/ReactToastify.min.css'
 import './style.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -15,7 +16,7 @@ const store = configureStore();
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
-        <ScrollToTop/>
+            <ScrollToTop/>
             <App/>
         </BrowserRouter>
     </Provider>,

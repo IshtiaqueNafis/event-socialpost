@@ -6,25 +6,25 @@ const ASYNC_ACTION_ERROR = 'ASYNC_ACTION_ERROR';
 //endregion
 
 //region ***Actions()***
-export function AsyncActionStart() {
+export const AsyncActionStart = () => {
     return {
         type: ASYNC_ACTION_START,
-    }
-}
+    };
+};
 
-export function AsyncActionFinish() {
+export const AsyncActionFinish = () => {
     return {
         type: ASYNC_ACTION_FINISH
-    }
-}
+    };
+};
 
 
-export function AsyncActionError(error) {
+export const AsyncActionError = error => {
     return {
         type: ASYNC_ACTION_ERROR,
         payload: error
-    }
-}
+    };
+};
 
 //endregion
 

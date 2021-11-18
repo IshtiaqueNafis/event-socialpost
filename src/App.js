@@ -9,6 +9,7 @@ import EventForm from "./features/events/eventForm/EventForm";
 import {Route, useLocation} from "react-router-dom";
 import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
+import {ToastContainer} from "react-toastify";
 
 const App = () => {
     const {key} = useLocation(); // updates the page
@@ -16,6 +17,7 @@ const App = () => {
     return (
         <>
             <ModalManager/>
+            <ToastContainer theme={"colored"} position={'bottom-right'} hideProgressBar/>
             <Route exact path={'/'} component={HomePage}/>
             <Route path={'/(.+)'} render={() => (
                 // path={'/(.+)'} --> means follow any path after render

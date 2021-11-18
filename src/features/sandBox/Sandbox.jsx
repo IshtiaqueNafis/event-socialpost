@@ -9,6 +9,8 @@ import TestMap from "./TestMap";
 const Sandbox = () => {
     const dispatch = useDispatch()
 
+    const [target, setTarget] = useState(null);
+
     const defaultProps = {
         center: {
             lat: 59.95,
@@ -26,14 +28,33 @@ const Sandbox = () => {
 
     const data = useSelector(state => state.test.data);
     // this comes from const initalState = {
+
     //     data: 42
     // }
+    const {loading} = useSelector(state => state.async);
+
     return (
         <>
             <h1>Testing 123</h1>
             <h3>Data is :{data}</h3>
-            <Button content={'Increment'} color={'green'} onClick={() => dispatch(increment(2))}/>
-            <Button content={'Decrement'} color={'red'} onClick={() => dispatch(decrement(1))}/>
+            <Button
+                name={'increment'}
+                loading={loading && target === 'increment'}
+                content={'Increment'}
+                color={'green'}
+                onClick={(e) => {
+                    dispatch(increment(2))
+                    setTarget(e.target.name);
+                }}/>
+            <Button
+                name={'decrement'}
+                loading={loading && target === 'decrement'}
+                content={'Decrement'}
+                color={'red'}
+                onClick={(e) => {
+                    dispatch(decrement(2))
+                    setTarget(e.target.name);
+                }}/>
             <Button content={'Open Modal'}
                     color={'teal'}
                     onClick={() => dispatch(openModal({modalType: 'TestModal', modalProps: {data}}))}
