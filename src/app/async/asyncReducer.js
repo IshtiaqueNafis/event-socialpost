@@ -30,23 +30,23 @@ export const AsyncActionError = error => {
 
 
 //region ***reducer***
-const initalState = {
+const initialState = {
     loading: false,
     error: null,
 }
-export default function asyncReducer(state = initalState, {type, payload}) {
+export default function asyncReducer(state = initialState, {type, payload}) {
     switch (type) {
         case ASYNC_ACTION_START: {
             return {
                 ...state,
-                loading: true,
-                error: null
+                loading: true, // means its loading
+                error: null // no error.
             }
         }
         case ASYNC_ACTION_FINISH: {
             return {
                 ...state,
-                loading: false,
+                loading: false, // loading will be false.
 
             }
         }
@@ -54,7 +54,7 @@ export default function asyncReducer(state = initalState, {type, payload}) {
             return {
                 ...state,
                 loading: false,
-                error: payload
+                error: payload // error has occoured.
             }
         }
 

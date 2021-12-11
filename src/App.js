@@ -1,15 +1,14 @@
 import React from 'react';
 import {Container} from "semantic-ui-react";
+import {ToastContainer} from "react-toastify";
+import {Route, useLocation} from "react-router-dom";
 import EventDashBoard from "./features/events/eventDashBoard/EventDashBoard";
 import NavBar from "./features/nav/NavBar";
-
 import HomePage from "./features/home/HomePage";
 import EventDetailedPage from "./features/events/eventsDetailed/EventDetailedPage";
 import EventForm from "./features/events/eventForm/EventForm";
-import {Route, useLocation} from "react-router-dom";
 import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
-import {ToastContainer} from "react-toastify";
 
 const App = () => {
     const {key} = useLocation(); // updates the page

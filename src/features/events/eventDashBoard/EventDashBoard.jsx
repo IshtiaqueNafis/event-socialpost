@@ -4,11 +4,16 @@ import EventList from "./EventList";
 import {useSelector} from "react-redux";
 import EventListItemPlaceholder from "./EventListItemPlaceHolder";
 import EventFilters from "./EventFilters";
+import LoadingComponent from "../../../layout/LoadingComponent";
 
 const EventDashBoard = () => {
 
-    const {events} = useSelector(state => state.event)
-    const {loading} = useSelector(state => state.async);
+    //region selectors.
+    const {events} = useSelector(state => state.event) // event from selectors.
+    const {loading} = useSelector(state => state.async); // async fdrom sleelctr.s
+    //endregion
+
+    if (loading) return <LoadingComponent/>
 
 
     return (

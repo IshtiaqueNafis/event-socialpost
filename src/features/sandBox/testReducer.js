@@ -2,10 +2,10 @@ import {AsyncActionError, AsyncActionFinish, AsyncActionStart} from "../../app/a
 import {delay} from "../../app/common/utlis/util";
 
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER'
-export const DECREMENT_COUNTER = 'DECREMENT_COUNTERT'
+export const DECREMENT_COUNTER = 'DECREMENT_COUNTER'
 
 export function increment(amount) {
-    return async function (dispatch) {
+    return async function (dispatch) { // dipsatch comes from the store.
         dispatch(AsyncActionStart()) //start the operation
         try {
             await delay(1000); // checks the delay
