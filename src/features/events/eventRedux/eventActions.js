@@ -20,6 +20,17 @@ export const loadEvents = () => {
 }
 //endregion
 
+//region
+export const listenToEvents = (events) =>{
+    return{
+        type: FETCH_EVENTS,
+        payload: events
+    }
+}
+
+//endregion
+
+
 //region ***CreateEvent(event)*** --> Creates an Event
 export const createEvent = event => {
     return {

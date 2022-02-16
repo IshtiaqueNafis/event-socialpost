@@ -3,7 +3,7 @@ import firebase from '../config/firebase';
 const db = firebase.firestore();
 
 //region getEventsFromFirestore = observer --> gets data fromFireStore.
-export const getEventsFromFirestore = observer => db.collection('events').onSnapshot(observer);
+export const listenToEventsFromFirestore = () => db.collection('events');
 //endregion
 
 //region dataFromSnapshot(snapshot) returns data on usable format
@@ -25,4 +25,11 @@ export function dataFromSnapshot(snapshot){
         id: snapshot.id,
     }
 }
+//endregion
+
+//region listenToEventFromFirestore(eventId) gets a single event from firestore.
+export function listenToEventFromFirestore(eventId) {
+    return db.collection('events').doc(eventId);
+}
+
 //endregion
