@@ -9,10 +9,9 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
-import {configureStore} from "./redux/store/configureStore";
 import ScrollToTop from "./layout/ScrollToTop";
+import {store} from "./redux/store/confiigureStore";
 
-const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>

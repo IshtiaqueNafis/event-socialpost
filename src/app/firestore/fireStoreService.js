@@ -2,7 +2,7 @@ import firebase from '../config/firebase';
 
 const db = firebase.firestore();
 
-//region getEventsFromFirestore = observer --> gets data fromFireStore.
+//region getEventsFromFirestore = observer --> gets event data fromFireStore.
 export const listenToEventsFromFirestore = () => db.collection('events');
 //endregion
 

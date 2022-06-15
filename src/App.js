@@ -9,6 +9,7 @@ import EventDetailedPage from "./features/events/eventsDetailed/EventDetailedPag
 import EventForm from "./features/events/eventForm/EventForm";
 import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
+import ErrorComponent from "./app/common/ErrorComponent";
 
 const App = () => {
     const {key} = useLocation(); // updates the page
@@ -27,8 +28,8 @@ const App = () => {
                         <Route exact path={'/sandBox'} component={Sandbox}/>
                         <Route path={'/events/:id'} component={EventDetailedPage}/>
                         <Route path={['/createEvent', '/manage/:id']} component={EventForm} key={key}/>
-                        {/*key is being passed so the keys will be updated here when data on componenet chagnes */}
-                        {/*  path={['/createEvent','manage/:id']} means either of this two path will work  // updates the page   */}
+                        <Route path={'/error'} component={ErrorComponent} />
+
                     </Container>
                 </>
 

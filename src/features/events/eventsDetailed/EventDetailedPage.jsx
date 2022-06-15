@@ -4,23 +4,27 @@ import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSideBar from "./EventDetailedSideBar";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import useFireStoreDoc from "../../../app/hooks/useFireStoreDoc";
+import {listenToEventsFromFirestore} from "../../../app/firestore/fireStoreService";
+import {listenToEvents} from "../eventRedux/eventActions";
+import {Redirect, useParams} from "react-router-dom";
+import LoadingComponent from "../../../layout/LoadingComponent";
 
-const EventDetailedPage = ({match}) => {
-    //region ***match***
-    //{match} comes from history hooks
-    const event = useSelector(state => state.event.events.find(e => e.id === match.params.id));
-    //   as={Link} to={`/events/${event.id}`} this where the paramrams .id is coming froom
-    // this geting a single event.
-    //region
-    /*
-    useSelector(state => state.event.events.find(e => e.id === match.params.id));
-    state => state.event.events.find
-    cause events is an array match.params.id comes from historyhooks
-     */
+const EventDetailedPage = () => {
+    const {id} = useParams();
+    const dispatch = useDispatch();
+    const event = useSelector(state => state.event.events.find(e => e.id === id));
+    const {error} = useSelector(state => state.async);
+    const {loading} = useSelector(state => state.event);
+    useFireStoreDoc({
+        query: () => listenToEventsFromFirestore(id),
+        data: event => dispatch(listenToEvents([event])),
+        deps: [id, dispatch]
+    })
+    if (loading || (!event && !error)) return <LoadingComponent content={'Loading event'}/>
+    if (error) return <Redirect to={'/error'}/>
 
-    //endregion
-    //endregion
     return (
         <Grid>
             <Grid.Column width={10}>
@@ -29,7 +33,7 @@ const EventDetailedPage = ({match}) => {
                 <EventDetailedChat/>
             </Grid.Column>
             <Grid.Column width={6}>
-                <EventDetailedSideBar attendees={event.attendees}/>
+                <EventDetailedSideBar attendees={event?.attendees}/>
             </Grid.Column>
 
         </Grid>
