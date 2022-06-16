@@ -5,32 +5,32 @@ import {useDispatch, useSelector} from "react-redux";
 import EventListItemPlaceholder from "./EventListItemPlaceHolder";
 import EventFilters from "./EventFilters";
 import LoadingComponent from "../../../layout/LoadingComponent";
-import useFireStoreCollection from "../../../app/hooks/useFireStoreCollection";
+import {eventSelectors, loadEvents} from "../../../redux/reducer/eventSliceReducer";
 import {listenToEventsFromFirestore} from "../../../app/firestore/fireStoreService";
-import {loadEvents} from "../../../redux/reducer/eventSliceReducer";
+import useFireStoreCollection from "../../../app/hooks/useFireStoreCollection";
+import {Redirect} from "react-router-dom";
 
 const EventDashBoard = () => {
 
     //region selectors.
     const dispatch = useDispatch();
-    const {events,loading} = useSelector(state => state.event) // event from selectors.
-
-    //endregion
+    const events = useSelector(eventSelectors.selectAll);
+    const {status, eventsLoaded} = useSelector(state => state.events);
 
     useFireStoreCollection({
         query: () => listenToEventsFromFirestore(),
         data: events => dispatch(loadEvents({events})),
-        deps: [dispatch]
-
+        deps: [dispatch, eventsLoaded]
     })
 
-    if (loading) return <LoadingComponent/>
+    if (status === 'pending') return <LoadingComponent message={'Loading Events'}/>
+    if (!events) return <Redirect to={'/error'}/>
 
 
     return (
         <Grid>
             <Grid.Column width={10}>
-                {loading &&
+                {(status === 'pending') &&
                 <>
                     <EventListItemPlaceholder/>
                     <EventListItemPlaceholder/>

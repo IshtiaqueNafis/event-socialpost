@@ -8,7 +8,7 @@ import {logger} from "redux-logger/src";
 export const store = configureStore({
     reducer: {
         modal: modalReducer,
-        event: eventReducer,
+        events: eventReducer,
         async: asyncReducer,
         auth: authReducer
     },

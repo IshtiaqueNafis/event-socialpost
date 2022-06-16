@@ -1,10 +1,10 @@
 import React from 'react';
-import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
+import {Button, Icon, Item, Label, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {deleteEvent} from "../eventRedux/eventActions";
 import {format} from "date-fns";
+import {deleteEventAsync} from "../../../redux/reducer/eventSliceReducer";
 
 const EventListItem = ({event}) => {
     //region *** event,selectEvent}
@@ -27,7 +27,16 @@ const EventListItem = ({event}) => {
                             <Item.Header content={event.title}/>
                             <Item.Description>
                                 Hosted by {event.hostedBy}
+
                             </Item.Description>
+                            {event.isCancelled && (
+                                <Label
+                                    style={{top: '-40px'}}
+                                    ribbon={"right"}
+                                    color={'red'}
+                                    content={'this event is cancelled'}
+                                />
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -35,7 +44,7 @@ const EventListItem = ({event}) => {
 
             <Segment>
                <span>
-                   <Icon name={'clock'}/> {format(event.date,'MMMM d, yyyy h:mm a') }
+                   <Icon name={'clock'}/> {format(event.date, 'MMMM d, yyyy h:mm a')}
                    <Icon name={'marker'}/>{event.venue.address}
 
                </span>
@@ -58,7 +67,7 @@ const EventListItem = ({event}) => {
                     as={Link} to={`/events/${event.id}`}
                     color={'teal'} floated={'right'} content="view"/>
                 <Button
-                    onClick={() => dispatch(deleteEvent(event.id))}
+                    onClick={() => dispatch(deleteEventAsync({id: event.id}))}
                     color={'red'} floated={'right'} content={'Delete'}
                 />
             </Segment>

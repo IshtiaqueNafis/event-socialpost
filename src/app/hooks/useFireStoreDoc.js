@@ -9,10 +9,7 @@ export default function useFireStoreDoc({query, data, deps}) {
 
         const unsubscribe = query().onSnapshot(
             snapshot => {
-               if(snapshot.exists){
-                   dispatch(AsyncActionError({code: 'not-found', message: 'Could not find document'}));
-                   return;
-               }
+
                 data(dataFromSnapshot(snapshot)); // what do with data
 
             },

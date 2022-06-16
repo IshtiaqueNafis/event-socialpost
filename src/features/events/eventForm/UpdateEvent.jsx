@@ -1,37 +1,36 @@
 /* global google  */
 // this means global is google part of index.html
-import React from 'react';
-import {Button, Header, Segment} from "semantic-ui-react";
+import React, {useEffect, useState} from 'react';
+import {Button, Confirm, Header, Segment} from "semantic-ui-react";
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import MyTextInput from "../../../app/common/form/MyTextInput";
-import {createEvent, updateEvent} from "../eventRedux/eventActions";
-import cuid from "cuid";
 import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
 import {categoryData} from "../../../app/api/categoryOptions";
 import MyDateInput from "../../../app/common/form/MyDateInput";
 import MyPlaceInput from "../../../app/common/form/MyPlaceInput";
+import {eventSelectors, getEventDetailsAsync, updateEventAsync} from "../../../redux/reducer/eventSliceReducer";
+import LoadingComponent from "../../../layout/LoadingComponent";
+import {toast} from "react-toastify";
 
 
-const EventForm = ({match, history}) => {
+const UpdateEvent = ({match, history}) => {
 
 
     //region ***initialValues,Dispatch,selector***
-    const selectedEvent = useSelector(state => state.event.events.find(e => e.id === match.params.id)); // geeting the event Id
+    // const selectedEvent = useSelector(state => state.event.events.find(e => e.id === match.params.id)); // geeting the event Id
+    const selectedEvent = useSelector(state => eventSelectors.selectById(state, match.params.id));
     const dispatch = useDispatch();
-    const initialValues = selectedEvent ?? {
-        title: '',
-        category: '',
-        description: '',
-        city: {address: '', latLng: null},
-        venue: {address: '', latLng: null},
-        date: '',
-    }
-    //selectedEvents ?? --> means if selected event is not null pick the Selected Events if not use the selected event.
-    //endregion
+    const [loadingCancel, setLoadingCancel] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
+
+    const {status, error} = useSelector(state => state.events);
+    const initialValues = selectedEvent
+
 
     //region ***ValidationSchema --> Yup object to validate forms***
     const validationSchema = Yup.object({
@@ -49,7 +48,31 @@ const EventForm = ({match, history}) => {
         date: Yup.string().required()
 
     })
+
     //endregion
+    async function handleCancelToggle(event) {
+        setConfirmOpen(false);
+        setLoadingCancel(true);
+
+        try {
+            dispatch(updateEventAsync({
+                event,
+                isCancelled: event.isCancelled !== undefined
+            }))
+            setLoadingCancel(false);
+        } catch (e) {
+            setLoadingCancel(false);
+            toast.error(e.message);
+        }
+    }
+
+    useEffect(() => {
+        if (!selectedEvent) dispatch(getEventDetailsAsync({id: match.params.id}))
+    }, [match.params.id, dispatch, selectedEvent])
+
+    if (status === 'pending' || (!selectedEvent && !error)) return <LoadingComponent message={'Loading Event'}/>
+
+    if (!selectedEvent) return <Redirect to={'/error'}/>
 
 
     return (
@@ -59,16 +82,9 @@ const EventForm = ({match, history}) => {
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
                         //values is part of formikValue
-                        selectedEvent ? // cehcks if selected event is a not null
-                            dispatch(updateEvent({...selectedEvent, ...values})) // if it is not null then update it
-                            :
-                            dispatch(createEvent( //else dispatch to create event.
-                                {
-                                    ...values, id: cuid(),
-                                    hostedBy: 'Bob',
-                                    attendees: [],
-                                    hostPhotoURL: '/assets/user.png'
-                                }));
+
+
+                        dispatch(updateEventAsync({event: values, isCancelled: undefined})) // if it is not null then update it
 
 
                         history.push('/events')
@@ -107,7 +123,16 @@ const EventForm = ({match, history}) => {
                                      dateFormat={'MMMM d,yyyy,h:mm a'} // dateFormat shows date informatted settings.
                         />
 
+                        <Button
+                            type="button"
+                            loading={loadingCancel}
+                            floated={'left'}
+                            color={selectedEvent.isCancelled ? 'green' : 'red'}
+                            content={selectedEvent.isCancelled ? 'Reactivate event' : 'Cancel Event'}
+                            onClick={() => setConfirmOpen(true)}
 
+
+                        />
                         <Button loading={isSubmitting} // this will load the screen
                                 disabled={!isValid || !dirty || isSubmitting}
                             // region ***{!isValid || !dirty || isSubmitting} ***
@@ -134,8 +159,14 @@ const EventForm = ({match, history}) => {
                 )}
 
             </Formik>
+            <Confirm
+                content={selectedEvent?.isCancelled  ? 'This will activate the event - are you sure ' : 'this will deactivate the event - are you sure '}
+                open={confirmOpen}
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={() => handleCancelToggle(selectedEvent)}
+            />
         </Segment>
     );
 };
 
-export default EventForm;
+export default UpdateEvent;
