@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Container} from "semantic-ui-react";
 import {ToastContainer} from "react-toastify";
 import {Route} from "react-router-dom";
@@ -11,9 +11,23 @@ import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
 import ErrorComponent from "./app/common/ErrorComponent";
 import CreateEvent from "./features/events/eventForm/CreateEvent";
+import {useDispatch, useSelector} from "react-redux";
+
+import {setUser} from "./redux/reducer/authSliceReducer";
+import firebase from "firebase/compat";
 
 const App = () => {
+    const {user, loading} = useSelector(state => state.auth);
+    const dispatch = useDispatch();
 
+    useEffect(()=>{
+        const unsub = firebase.auth().onAuthStateChanged(logged=>{
+            if(logged){
+                dispatch(setUser(logged));
+            }
+        })
+        return () => unsub();
+    },[dispatch])
 
     return (
         <>

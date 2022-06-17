@@ -3,10 +3,12 @@ import {Form, Formik} from 'formik';
 import * as Yup from 'yup'
 import {Button} from "semantic-ui-react";
 import {useDispatch} from "react-redux";
-import {closeMedal} from "../../app/common/modals/redux/modalReducer";
-import {signInUser} from "./redux/authActions";
+
+
 import MyTextInput from "../../app/common/form/MyTextInput";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
+import {signInUser} from "../../redux/reducer/authSliceReducer";
+import {closeModal} from "../../redux/reducer/modalSliceReducer";
 
 const LogInForm = () => {
 
@@ -22,11 +24,11 @@ const LogInForm = () => {
                         password: Yup.string().required()
                     })}
 
-                    onSubmit={(values,{setSubmitting}) => {
-                        //setSub,itting comes from Forms.
-                        dispatch(signInUser(values));
-                        // setSubmitting(false);//means done submitting
-                        dispatch(closeMedal());
+                    onSubmit={async (values, {setSubmitting}) => {
+
+                        await dispatch(signInUser({credentials: values}));
+                        setSubmitting(false)
+                        dispatch(closeModal());
                     }}
 
             >

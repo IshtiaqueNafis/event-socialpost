@@ -1,7 +1,8 @@
 import React from 'react';
 import {Button, Menu} from "semantic-ui-react";
 import {useDispatch} from "react-redux";
-import {openModal} from "../../app/common/modals/redux/modalReducer";
+import {openModal} from "../../redux/reducer/modalSliceReducer";
+
 
 const SignedOutMenu = () => {
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import {useDispatch} from "react-redux";
 import {Modal} from "semantic-ui-react";
-import {closeMedal} from "./redux/modalReducer";
+import {closeModal} from "../../../redux/reducer/modalSliceReducer";
+
 
 export default function ModalWrapper({children, size, header}) {
     //region ***{children, size, header}***
@@ -16,12 +17,12 @@ export default function ModalWrapper({children, size, header}) {
     return (
         <Modal
             open={true}
-            onClose={() => dispatch(closeMedal())}
+            onClose={() => dispatch(closeModal())}
             size={size}>
             {header && <Modal.Header>{header}</Modal.Header>}
             <Modal.Content>
                 {children}
-                {/*    childern is considered opening and closing tags. */}
+
             </Modal.Content>
         </Modal>
     );

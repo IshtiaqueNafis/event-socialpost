@@ -30,7 +30,7 @@ export default function ModalManager() {
 }
      */
     //endregion
-    const currentModal = useSelector(state => state.modals) // getting the modal state from reducer.
+    const currentModal = useSelector(state => state.modal) // getting the modal state from reducer.
 
     let renderedModal;
 
