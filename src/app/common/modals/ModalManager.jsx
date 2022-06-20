@@ -2,11 +2,13 @@ import React from 'react';
 import {useSelector} from "react-redux";
 import TestModal from "../../../features/sandBox/TestModal";
 import LogInForm from "../../../features/auth/LoginForm";
+import RegisterForm from "../../../features/auth/RegisterForm";
 
 export default function ModalManager() {
     const modalLookup = {
         TestModal,
-        LogInForm
+        LogInForm,
+        RegisterForm
 
 
     };

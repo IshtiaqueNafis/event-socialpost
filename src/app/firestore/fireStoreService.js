@@ -1,4 +1,5 @@
 import firebase from '../config/firebase';
+import {toast} from "react-toastify";
 
 const db = firebase.firestore();
 
@@ -45,3 +46,31 @@ export const queryDataCollection = async ({query}) => {
     console.log({data});
     return data;
 };
+
+export const setUserProfileData = (user) => {
+    return db.collection('users').doc(user.uid).set({
+        displayName: user.displayName,
+        email: user.email,
+        photoUrl: user.photoURL || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+}
+
+export const socialLogin = async (selectedProvider) => {
+    let provider;
+    if (selectedProvider === 'facebook') {
+        provider = new firebase.auth.FacebookAuthProvider();
+    }
+    if (selectedProvider === 'google') {
+        provider = new firebase.auth.GoogleAuthProvider();
+    }
+
+    try {
+        const result = await firebase.auth().signInWithPopup(provider);
+        if (result.additionalUserInfo.isNewUser) {
+            await setUserProfileData(result.user);
+        }
+    } catch (error) {
+        toast.error(error.message);
+    }
+}

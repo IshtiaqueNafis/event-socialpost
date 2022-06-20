@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {AsyncActionError} from "./asyncSliceReducer";
 import firebase from "firebase/compat/app";
+import {setUserProfileData} from "../../app/firestore/fireStoreService";
 
 
 const initialState = {
@@ -16,10 +17,25 @@ export const signInUser = createAsyncThunk(
     async ({credentials}, thunkApi) => {
 
         try {
-            const result = await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
-            return result.user;
+            await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+
         } catch (e) {
-            return thunkApi.dispatch(AsyncActionError(e.messages))
+            return thunkApi.rejectWithValue(e.messages)
+        }
+    }
+)
+
+export const registerUserAsync = createAsyncThunk(
+    "auth/RegisterUser",
+    async ({credentials}, thunkApi) => {
+        try {
+            const result = await firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
+             await result.user.updateProfile({
+                displayName: credentials.displayName
+            });
+        return     await setUserProfileData(result.user);
+        } catch (e) {
+            return thunkApi.rejectWithValue(e.message);
         }
     }
 )
@@ -79,8 +95,19 @@ export const authSlice = createSlice({
         [signOutUser.rejected]: (state, {payload}) => {
             state.status = "idle";
             state.error = payload;
-        }
+        },
         //endregion
+
+        [registerUserAsync.pending]: (state) => {
+            state.status = 'pending';
+        },
+        [registerUserAsync.fulfilled]:(state)=>{
+            state.status = 'idle';
+        },
+        [registerUserAsync.rejected]:(state,{payload})=>{
+            state.status = "idle";
+            state.error = payload;
+        }
     }
 });
 export const {setUser} = authSlice.actions;

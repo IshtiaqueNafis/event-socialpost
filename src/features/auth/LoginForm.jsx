@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup'
-import {Button} from "semantic-ui-react";
+import {Button, Divider} from "semantic-ui-react";
 import {useDispatch} from "react-redux";
 
 
@@ -9,6 +9,7 @@ import MyTextInput from "../../app/common/form/MyTextInput";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import {signInUser} from "../../redux/reducer/authSliceReducer";
 import {closeModal} from "../../redux/reducer/modalSliceReducer";
+import SocialLogIn from "./SocialLogIn";
 
 const LogInForm = () => {
 
@@ -44,7 +45,10 @@ const LogInForm = () => {
                             size={'large'}
                             color={'teal'}
                             content={'Login'}/>
+                        <Divider horizontal>Or</Divider>
+                        <SocialLogIn/>
                     </Form>
+
                 )}
             </Formik>
         </ModalWrapper>

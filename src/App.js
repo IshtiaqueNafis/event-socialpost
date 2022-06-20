@@ -11,23 +11,24 @@ import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
 import ErrorComponent from "./app/common/ErrorComponent";
 import CreateEvent from "./features/events/eventForm/CreateEvent";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import {setUser} from "./redux/reducer/authSliceReducer";
 import firebase from "firebase/compat";
+import AccountPage from "./features/auth/AccountPage";
 
 const App = () => {
-    const {user, loading} = useSelector(state => state.auth);
+
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-        const unsub = firebase.auth().onAuthStateChanged(logged=>{
-            if(logged){
+    useEffect(() => {
+        const unsub = firebase.auth().onAuthStateChanged(logged => {
+            if (logged) {
                 dispatch(setUser(logged));
             }
         })
         return () => unsub();
-    },[dispatch])
+    }, [dispatch])
 
     return (
         <>
@@ -45,6 +46,7 @@ const App = () => {
                         <Route path={'/manage/:id'} component={UpdateEvent}/>
                         <Route path={'/createEvent'} component={CreateEvent}/>
                         <Route path={'/error'} component={ErrorComponent}/>
+                        <Route path={'/Account'} component={AccountPage}/>
 
                     </Container>
                 </>

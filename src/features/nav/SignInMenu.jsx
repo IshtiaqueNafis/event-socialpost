@@ -18,8 +18,9 @@ const SignInMenu = () => {
                 <Dropdown.Menu>
                     <Dropdown.Item as={Link} to={'/createEvent'} text="Create Event" icon={'plus'}/>
                     <Dropdown.Item text="My Profile" icon={'user'}/>
-                    <Dropdown.Item onClick={() => {
-                        dispatch(signOutUser())
+                    <Dropdown.Item text="Account" icon={'user'} as={Link} to={'/account'}/>
+                    <Dropdown.Item onClick={async () => {
+                        await dispatch(signOutUser())
                         history.push('/');
                     }} text="Sign Out" icon={'power'}/>
                 </Dropdown.Menu>
