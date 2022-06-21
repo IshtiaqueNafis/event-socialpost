@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {AsyncActionError} from "./asyncSliceReducer";
 import firebase from "firebase/compat/app";
 import {setUserProfileData} from "../../app/firestore/fireStoreService";
+import {closeModal} from "./modalSliceReducer";
 
 
 const initialState = {
@@ -18,9 +19,11 @@ export const signInUser = createAsyncThunk(
 
         try {
             await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+            thunkApi.dispatch(closeModal());
 
         } catch (e) {
-            return thunkApi.rejectWithValue(e.messages)
+
+            return thunkApi.rejectWithValue({message: 'Wrong email or password'});
         }
     }
 )
@@ -30,11 +33,12 @@ export const registerUserAsync = createAsyncThunk(
     async ({credentials}, thunkApi) => {
         try {
             const result = await firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
-             await result.user.updateProfile({
+            await result.user.updateProfile({
                 displayName: credentials.displayName
             });
-        return     await setUserProfileData(result.user);
+            return await setUserProfileData(result.user);
         } catch (e) {
+          
             return thunkApi.rejectWithValue(e.message);
         }
     }
@@ -101,12 +105,12 @@ export const authSlice = createSlice({
         [registerUserAsync.pending]: (state) => {
             state.status = 'pending';
         },
-        [registerUserAsync.fulfilled]:(state)=>{
+        [registerUserAsync.fulfilled]: (state) => {
             state.status = 'idle';
         },
-        [registerUserAsync.rejected]:(state,{payload})=>{
+        [registerUserAsync.rejected]: (state, action) => {
             state.status = "idle";
-            state.error = payload;
+            console.log({action})
         }
     }
 });
