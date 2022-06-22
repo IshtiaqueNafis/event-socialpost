@@ -31,7 +31,6 @@ export const dataFromSnapshot = snapshot => {
 
 //region listenToEventFromFirestore(eventId) gets a single event from firestore.
 export const listenToEventFromFirestore = eventId => db.collection('events').doc(eventId);
-
 //endregion
 
 export const cancelEventToggle = (event) =>
@@ -78,4 +77,8 @@ export const socialLogin = async (selectedProvider) => {
 export const updateUserPassword=(creds)=>{
     const user = firebase.auth().currentUser
     return user.updatePassword(creds.newPassword1);
+}
+
+export const getUserProfile=(userId)=>{
+    return db.collection('users').doc(userId);
 }

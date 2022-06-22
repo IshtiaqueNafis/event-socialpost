@@ -10,7 +10,7 @@ export default function useFireStoreCollection({query, data, deps}) {
             snapshot => {
                 const docs = snapshot.docs.map(doc => dataFromSnapshot(doc));
                 data(docs); // what do with data
-            },
+            }
         );
 
         return () => {

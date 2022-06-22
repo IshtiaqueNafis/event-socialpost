@@ -18,6 +18,7 @@ import firebase from "firebase/compat";
 import AccountPage from "./features/auth/AccountPage";
 import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
 import LoadingComponent from "./layout/LoadingComponent";
+import ProfilePage from "./features/profiles/profilePage/ProfilePage";
 
 const App = () => {
 
@@ -56,8 +57,8 @@ const App = () => {
                         <Route path={'/manage/:id'} component={UpdateEvent}/>
                         <Route path={'/createEvent'} component={CreateEvent}/>
                         <Route path={'/error'} component={ErrorComponent}/>
+                        <Route path={'/profile/:id'} component={ProfilePage}/>
                         <Route path={'/Account'} component={AccountPage}/>
-
                     </Container>
                 </>
 

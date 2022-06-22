@@ -26,11 +26,11 @@ export const loadEvents = createAsyncThunk(
 
 export const getEventDetailsAsync = createAsyncThunk(
     'event/eventDetailsAsync',
-    async ({id}, thunkApi) => {
+    async ({event}, thunkApi) => {
 
 
         try {
-            const event = await listenToEventsFromFirestore().doc(id).get().then(snapshot => dataFromSnapshot(snapshot));
+
 
             if (event === undefined) {
                 return thunkApi.rejectWithValue({message: 'data not found'});
