@@ -3,7 +3,7 @@ import {createSlice} from "@reduxjs/toolkit";
 export const asyncSlice = createSlice({
     name: "async",
     initialState: {
-        loading: false, error: null
+        loading: false, error: null, initialized: false
     },
     reducers: {
 
@@ -18,6 +18,9 @@ export const asyncSlice = createSlice({
         },
         AsyncActionError: (state, payload) => {
             state.error = payload;
+        },
+        asyncAppLoaded:(state)=>{
+            state.initialized = true;
         }
         //endregion
 
@@ -26,5 +29,5 @@ export const asyncSlice = createSlice({
 });
 
 
-export const {AsyncActionStart, AsyncActionFinish, AsyncActionError} = asyncSlice.actions;
+export const {AsyncActionStart, AsyncActionFinish, AsyncActionError,asyncAppLoaded} = asyncSlice.actions;
 export const asyncReducer = asyncSlice.reducer;

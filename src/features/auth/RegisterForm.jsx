@@ -24,15 +24,11 @@ const RegisterForm = () => {
 
                     onSubmit={async (values, {setSubmitting, setErrors}) => {
 
-                        try {
-                            await dispatch(registerUserAsync({credentials: values}));
-                            setSubmitting(false)
-                            dispatch(closeModal());
-                        } catch (e) {
-                            setErrors({auth: error.message})
-                                setSubmitting(false)
 
-                        }
+                        await dispatch(registerUserAsync({credentials: values}));
+                        setSubmitting(false)
+                        dispatch(closeModal());
+
 
                     }}
 

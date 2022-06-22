@@ -11,24 +11,34 @@ import Sandbox from "./features/sandBox/Sandbox";
 import ModalManager from "./app/common/modals/ModalManager";
 import ErrorComponent from "./app/common/ErrorComponent";
 import CreateEvent from "./features/events/eventForm/CreateEvent";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
-import {setUser} from "./redux/reducer/authSliceReducer";
+import {setUser, signOutUser} from "./redux/reducer/authSliceReducer";
 import firebase from "firebase/compat";
 import AccountPage from "./features/auth/AccountPage";
+import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
+import LoadingComponent from "./layout/LoadingComponent";
 
 const App = () => {
 
     const dispatch = useDispatch();
+    const {initialized} = useSelector(state => state.async);
 
     useEffect(() => {
         const unsub = firebase.auth().onAuthStateChanged(logged => {
             if (logged) {
                 dispatch(setUser(logged));
+                dispatch(asyncAppLoaded());
+            } else {
+                dispatch(signOutUser());
+                dispatch(asyncAppLoaded());
+
             }
         })
         return () => unsub();
     }, [dispatch])
+
+    if(!initialized) return <LoadingComponent content={'Loading App'}/>;
 
     return (
         <>

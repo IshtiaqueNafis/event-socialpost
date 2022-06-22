@@ -36,10 +36,11 @@ export const registerUserAsync = createAsyncThunk(
             await result.user.updateProfile({
                 displayName: credentials.displayName
             });
-            return await setUserProfileData(result.user);
+            await setUserProfileData(result.user);
+            thunkApi.dispatch(closeModal());
         } catch (e) {
-          
-            return thunkApi.rejectWithValue(e.message);
+
+            return thunkApi.rejectWithValue({message: e});
         }
     }
 )
@@ -65,7 +66,11 @@ export const authSlice = createSlice({
         setUser: (state, {payload}) => {
             state.currentUser = {
                 email: payload.email,
-                photoUrl: '/assets/user.png'
+                photoUrl: payload.photoURL,
+                uid: payload.uid,
+                displayName: payload.displayName,
+                providerId: payload.providerData[0].providerId
+
             }
             state.authenticated = true;
         }
@@ -74,6 +79,7 @@ export const authSlice = createSlice({
         //region *** signInUser***
         [signInUser.pending]: (state) => {
             state.status = 'pending';
+            state.error = null;
         },
 
         [signInUser.fulfilled](state, {payload}) {
@@ -110,7 +116,7 @@ export const authSlice = createSlice({
         },
         [registerUserAsync.rejected]: (state, action) => {
             state.status = "idle";
-            console.log({action})
+            state.error = action.payload;
         }
     }
 });
