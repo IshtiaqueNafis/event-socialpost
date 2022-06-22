@@ -1,20 +1,42 @@
 import React from 'react';
-import {Button, Icon, Item, List, Segment} from "semantic-ui-react";
+import {Button, Icon, Item, Label, List, Segment} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
+import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {format} from "date-fns";
+import {deleteEventAsync} from "../../../redux/reducer/eventSliceReducer";
 
-const EventListItem = ({event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue}}) => {
+const EventListItem = ({event}) => {
+    //region *** event,selectEvent}
+    /*event: {description, attendees, date, hostPhotoURL, hostedBy, title, venue} --> is the event object
+
+     */
+
+    //endregion
+    const dispatch = useDispatch();
+
+
     return (
         <Segment.Group>
 
             <Segment>
                 <Item.Group>
                     <Item>
-                        <Item.Image size="tiny" circular src={hostPhotoURL}/>
+                        <Item.Image size="tiny" circular src={event.hostPhotoURL}/>
                         <Item.Content>
-                            <Item.Header content={title}/>
+                            <Item.Header content={event.title}/>
                             <Item.Description>
-                                Hosted by {hostedBy}
+                                Hosted by {event.hostedBy}
+
                             </Item.Description>
+                            {event.isCancelled && (
+                                <Label
+                                    style={{top: '-40px'}}
+                                    ribbon={"right"}
+                                    color={'red'}
+                                    content={'this event is cancelled'}
+                                />
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -22,16 +44,16 @@ const EventListItem = ({event: {description, attendees, date, hostPhotoURL, host
 
             <Segment>
                <span>
-                   <Icon name={'clock'}/>{date}
-                   <Icon name={'marker'}/>{venue}
+                   <Icon name={'clock'}/> {format(event.date, 'MMMM d, yyyy h:mm a')}
+                   <Icon name={'marker'}/>{event.venue.address}
 
                </span>
             </Segment>
 
             <Segment secondary>
                 <List horizontal>
-                    {attendees.map(attendee =>(
-                    <EventListAttendee key={attendee.id} attendee={attendee} />
+                    {event.attendees.map(attendee => (
+                        <EventListAttendee key={attendee.id} attendee={attendee}/>
 
                     ))}
 
@@ -40,8 +62,14 @@ const EventListItem = ({event: {description, attendees, date, hostPhotoURL, host
 
             <Segment clearing>
                 {/*clearning means button and items wont go outside the boundarites*/}
-                <div> {description}</div>
-                <Button color={'teal'} floated={'right'} content="view" ></Button>
+                <div> {event.description}</div>
+                <Button
+                    as={Link} to={`/events/${event.id}`}
+                    color={'teal'} floated={'right'} content="view"/>
+                <Button
+                    onClick={() => dispatch(deleteEventAsync({id: event.id}))}
+                    color={'red'} floated={'right'} content={'Delete'}
+                />
             </Segment>
 
 
