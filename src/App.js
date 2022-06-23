@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Container} from "semantic-ui-react";
 import {ToastContainer} from "react-toastify";
-import {Route} from "react-router-dom";
+import {Route, useHistory} from "react-router-dom";
 import EventDashBoard from "./features/events/eventDashBoard/EventDashBoard";
 import NavBar from "./features/nav/NavBar";
 import HomePage from "./features/home/HomePage";
@@ -19,27 +19,40 @@ import AccountPage from "./features/auth/AccountPage";
 import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
 import LoadingComponent from "./layout/LoadingComponent";
 import ProfilePage from "./features/profiles/profilePage/ProfilePage";
+import {dataFromSnapshot, getUserProfile} from "./app/firestore/fireStoreService";
+import {listenToCurrentUserProfile} from "./redux/reducer/profileSliceReducer";
 
 const App = () => {
 
     const dispatch = useDispatch();
+    const history = useHistory();
     const {initialized} = useSelector(state => state.async);
 
     useEffect(() => {
-        const unsub = firebase.auth().onAuthStateChanged(logged => {
+        const verifyAuth = firebase.auth().onAuthStateChanged(logged => {
             if (logged) {
-                dispatch(setUser(logged));
-                dispatch(asyncAppLoaded());
+                dispatch(setUser(logged)); // setting the autheciated user when userlogs in
+                const profileRef = getUserProfile(logged.uid) // get the profile ref from database
+                profileRef.onSnapshot(snapshot => {
+                    dispatch(listenToCurrentUserProfile(dataFromSnapshot(snapshot))) // set the profile data
+                    dispatch(asyncAppLoaded()); // set the flag that app has been loaded
+
+                })
+                history.push("/events")
             } else {
                 dispatch(signOutUser());
                 dispatch(asyncAppLoaded());
 
             }
-        })
-        return () => unsub();
-    }, [dispatch])
 
-    if(!initialized) return <LoadingComponent content={'Loading App'}/>;
+        })
+        return () => {
+            verifyAuth();
+
+        }
+    }, [dispatch, history])
+
+    if (!initialized) return <LoadingComponent content={'Loading App'}/>;
 
     return (
         <>

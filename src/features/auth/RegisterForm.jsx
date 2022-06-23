@@ -6,14 +6,14 @@ import {registerUserAsync} from "../../redux/reducer/authSliceReducer";
 import {closeModal} from "../../redux/reducer/modalSliceReducer";
 import MyTextInput from "../../app/common/form/MyTextInput";
 import {Button, Label} from "semantic-ui-react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 const RegisterForm = () => {
 
     const dispatch = useDispatch()
-    const {error} = useSelector(state => state.auth);
+
     return (
-        <ModalWrapper size={'mini'} header={'Register In to Revnts'}>
+        <ModalWrapper size={'mini'} header={'Register In to Revents'}>
             <Formik initialValues={{email: '', password: '', displayName: ''}}
 
                     validationSchema={Yup.object({

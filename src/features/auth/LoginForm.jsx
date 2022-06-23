@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import MyTextInput from "../../app/common/form/MyTextInput";
 import ModalWrapper from "../../app/common/modals/ModalWrapper";
 import {signInUser} from "../../redux/reducer/authSliceReducer";
-import {closeModal} from "../../redux/reducer/modalSliceReducer";
 import SocialLogIn from "./SocialLogIn";
 
 const LogInForm = () => {

@@ -13,7 +13,8 @@ import LoadingComponent from "../../../layout/LoadingComponent";
 const ProfilePage = () => {
     const {id} = useParams();
     const dispatch = useDispatch();
-    const currentUserProfile = useSelector(state => profileSelectors.selectById(state,id));
+    const selectedUserProfile = useSelector(state => profileSelectors.selectById(state,id));
+    const {currentUser} = useSelector(state => state.auth);
     const {status, error} = useSelector(state => state.profile);
 
     useFireStoreDoc({
@@ -22,14 +23,14 @@ const ProfilePage = () => {
         deps: [dispatch, id]
     })
 
-    if (status === 'pending' || (!currentUserProfile && !error)) return <LoadingComponent content={'Loading profile Details'}/>
-    if (!currentUserProfile &&  error) return <Redirect to={'/error'}/>
+    if (status === 'pending' || (!selectedUserProfile && !error)) return <LoadingComponent content={'Loading profile Details'}/>
+    if (error) return <Redirect to={'/error'}/>
 
     return (
         <Grid>
             <Grid.Column width={16}>
-               <ProfileHeader profile={currentUserProfile}/>
-                <ProfileContent/>
+               <ProfileHeader profile={selectedUserProfile}  isCurrentUser={currentUser.uid===selectedUserProfile.id}/>
+                <ProfileContent profile={selectedUserProfile} isCurrentUser={currentUser.uid===selectedUserProfile.id}/>
             </Grid.Column>
         </Grid>
     );

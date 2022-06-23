@@ -1,7 +1,5 @@
-import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {dataFromSnapshot} from "../firestore/fireStoreService";
-import {AsyncActionError} from "../../redux/reducer/asyncSliceReducer";
 
 export default function useFireStoreDoc({query, data, deps}) {
 
@@ -12,7 +10,6 @@ export default function useFireStoreDoc({query, data, deps}) {
                 data(dataFromSnapshot(snapshot));
 
             },
-
         );
 
         return () => {

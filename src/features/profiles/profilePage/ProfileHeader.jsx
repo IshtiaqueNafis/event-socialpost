@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button, Divider, Grid, Header, Item, Reveal, Segment, Statistic} from 'semantic-ui-react'
 
-const ProfileHeader = ({profile}) => {
-    console.log({profile})
+const ProfileHeader = ({profile, isCurrentUser}) => {
+
     return (
         <Segment>
             <Grid>
@@ -23,17 +23,23 @@ const ProfileHeader = ({profile}) => {
                         <Statistic label={"Followers"} value={10}/>
                     </Statistic.Group>
                     <Divider/>
-                    <Reveal animated={'move'}>
-                        <Reveal animated={'move'}>
-                            <Reveal.Content visible style={{width: '100%'}}>
-                                <Button fluid color={'teal'} content={'Following'}/>
-                            </Reveal.Content>
-                            <Reveal.Content hidden  style={{width: '100%'}}>
-                                <Button fluid color={'red'} content={'UnFollow'}/>
-                            </Reveal.Content>
-                        </Reveal>
+                    <>
+                        {!isCurrentUser && (
+                            <Reveal animated={'move'}>
+                                <Reveal animated={'move'}>
+                                    <Reveal.Content visible style={{width: '100%'}}>
+                                        <Button fluid color={'teal'} content={'Following'}/>
+                                    </Reveal.Content>
+                                    <Reveal.Content hidden style={{width: '100%'}}>
+                                        <Button fluid color={'red'} content={'UnFollow'}/>
+                                    </Reveal.Content>
+                                </Reveal>
 
-                    </Reveal>
+                            </Reveal>
+                        )}
+
+                    </>
+
                 </Grid.Column>
             </Grid>
         </Segment>
