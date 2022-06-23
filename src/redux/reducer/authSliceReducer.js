@@ -3,6 +3,7 @@ import {AsyncActionError} from "./asyncSliceReducer";
 import firebase from "firebase/compat/app";
 import {setUserProfileData} from "../../app/firestore/fireStoreService";
 import {closeModal} from "./modalSliceReducer";
+import {resetProfileState} from "./profileSliceReducer";
 
 
 const initialState = {
@@ -20,6 +21,8 @@ export const signInUser = createAsyncThunk(
         try {
             await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
             thunkApi.dispatch(closeModal());
+
+
 
         } catch (e) {
 
@@ -45,13 +48,29 @@ export const registerUserAsync = createAsyncThunk(
     }
 )
 
+export const setUserAsync = createAsyncThunk(
+    "auth/setUserAsync",
+    async ({user},thunkApi)=>{
+        try {
+            return user;
+        }catch (e) {
+
+        }
+    }
+)
+
 
 export const signOutUser = createAsyncThunk(
     'auth/signOutUser',
     async (_, thunkApi) => {
 
         try {
+
             await firebase.auth().signOut();
+
+
+
+
 
         } catch (e) {
             return thunkApi.dispatch(AsyncActionError(e.messages))
@@ -63,16 +82,9 @@ export const authSlice = createSlice({
     name: "Auth",
     initialState: initialState,
     reducers: {
-        setUser: (state, {payload}) => {
-            state.currentUser = {
-                email: payload.email,
-                photoUrl: payload.photoURL,
-                uid: payload.uid,
-                displayName: payload.displayName,
-                providerId: payload.providerData[0].providerId
-
-            }
-            state.authenticated = true;
+        resetUser: (state) => {
+            state.currentUser = null;
+            state.authenticated = false;
         }
     },
     extraReducers: {
@@ -117,9 +129,24 @@ export const authSlice = createSlice({
         [registerUserAsync.rejected]: (state, action) => {
             state.status = "idle";
             state.error = action.payload;
+        },
+        [setUserAsync.pending]:(state)=>{
+            state.status = "pending";
+        },
+        [setUserAsync.fulfilled]:(state,{payload})=>{
+            state.currentUser ={
+                email: payload.email,
+                photoUrl: payload.photoURL,
+                uid: payload.uid,
+                displayName: payload.displayName,
+                providerId: payload.providerData[0].providerId
+            }
+            state.authenticated = true;
+            state.status = "idle";
         }
+
     }
 });
-export const {setUser} = authSlice.actions;
+export const {resetUser} = authSlice.actions;
 export const authReducer = authSlice.reducer;
 

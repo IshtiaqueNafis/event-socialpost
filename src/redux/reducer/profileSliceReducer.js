@@ -6,7 +6,6 @@ const profileAdapter = createEntityAdapter({
 })
 
 
-
 export const listenCurrentUserProfileAsync = createAsyncThunk(
     'profile/listenCurrentUserProfileAsync',
     async ({profile}, thunkApi) => {
@@ -31,8 +30,12 @@ export const profileSlice = createSlice({
 
     }),
     reducers: {
-        listenToCurrentUserProfile:(state,{payload})=>{
+        listenToCurrentUserProfile: (state, {payload}) => {
             state.currentUserProfile = payload;
+        },
+        resetProfileState: (state) => {
+            state.currentUserProfile = null;
+            profileAdapter.removeAll(state)
         }
 
     },
@@ -45,12 +48,12 @@ export const profileSlice = createSlice({
             state.status = "idle"
             state.error = null;
         },
-        [listenCurrentUserProfileAsync.rejected]:(state,{payload})=>{
+        [listenCurrentUserProfileAsync.rejected]: (state, {payload}) => {
             state.status = "idle";
             state.error = {payload};
         }
     }
 })
-export const {listenToCurrentUserProfile} = profileSlice.actions;
+export const {listenToCurrentUserProfile, resetProfileState} = profileSlice.actions;
 export const profileSelectors = profileAdapter.getSelectors(state => state.profile);
 export const profileReducer = profileSlice.reducer;

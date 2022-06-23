@@ -27,15 +27,15 @@ const LogInForm = () => {
                     onSubmit={async (values, {setSubmitting, setErrors}) => {
                         try {
                             await dispatch(signInUser({credentials: values}));
-                            setSubmitting(false)
+
                         } catch (e) {
 
-                            if (error) {
-                                setErrors({auth: error})
-                            }
-                            setSubmitting(false)
+                            console.log(e)
 
 
+
+                        }finally {
+                            setSubmitting(false);
                         }
 
                     }}

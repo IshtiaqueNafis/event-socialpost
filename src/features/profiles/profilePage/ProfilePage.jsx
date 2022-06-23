@@ -29,8 +29,8 @@ const ProfilePage = () => {
     return (
         <Grid>
             <Grid.Column width={16}>
-               <ProfileHeader profile={selectedUserProfile}  isCurrentUser={currentUser.uid===selectedUserProfile.id}/>
-                <ProfileContent profile={selectedUserProfile} isCurrentUser={currentUser.uid===selectedUserProfile.id}/>
+               <ProfileHeader profile={selectedUserProfile}  isCurrentUser={currentUser?.uid===selectedUserProfile.id}/>
+                <ProfileContent profile={selectedUserProfile} isCurrentUser={currentUser?.uid===selectedUserProfile.id}/>
             </Grid.Column>
         </Grid>
     );

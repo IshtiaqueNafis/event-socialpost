@@ -13,7 +13,7 @@ import ErrorComponent from "./app/common/ErrorComponent";
 import CreateEvent from "./features/events/eventForm/CreateEvent";
 import {useDispatch, useSelector} from "react-redux";
 
-import {setUser, signOutUser} from "./redux/reducer/authSliceReducer";
+import {resetUser, setUserAsync} from "./redux/reducer/authSliceReducer";
 import firebase from "firebase/compat";
 import AccountPage from "./features/auth/AccountPage";
 import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
@@ -27,20 +27,21 @@ const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const {initialized} = useSelector(state => state.async);
+    const {status} = useSelector(state => state.auth);
 
     useEffect(() => {
         const verifyAuth = firebase.auth().onAuthStateChanged(logged => {
             if (logged) {
-                dispatch(setUser(logged)); // setting the autheciated user when userlogs in
+
                 const profileRef = getUserProfile(logged.uid) // get the profile ref from database
                 profileRef.onSnapshot(snapshot => {
+                    dispatch(setUserAsync({user: logged})) // setting the autheciated user when userlogs in
                     dispatch(listenToCurrentUserProfile(dataFromSnapshot(snapshot))) // set the profile data
                     dispatch(asyncAppLoaded()); // set the flag that app has been loaded
 
                 })
-                history.push("/events")
             } else {
-                dispatch(signOutUser());
+                dispatch(resetUser());
                 dispatch(asyncAppLoaded());
 
             }

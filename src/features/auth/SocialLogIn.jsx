@@ -8,8 +8,8 @@ const SocialLogIn = () => {
     const dispatch = useDispatch()
 
     const handleSocialLogin = async provider => {
-        dispatch(closeModal());
         await socialLogin(provider);
+        dispatch(closeModal());
     };
 
     return (
