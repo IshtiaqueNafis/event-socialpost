@@ -20,22 +20,42 @@ export const listenCurrentUserProfileAsync = createAsyncThunk(
     }
 );
 
+export const listenToSelectedUserProfile = createAsyncThunk(
+    'profile/loadingProfile',
+    async ({profile}, thunkApi) => {
+        try {
+            if (profile === undefined) {
+                return thunkApi.rejectWithValue({error: 'error'})
+            }
+            return profile;
+
+        } catch (e) {
+            return thunkApi.rejectWithValue({error: e.message});
+        }
+
+    }
+)
 
 export const profileSlice = createSlice({
     name: 'profile',
-    initialState: profileAdapter.getInitialState({
+    initialState: {
         status: 'idle',
         error: null,
-        currentUserProfile: null
+        currentUserProfile: null,
+        selectedUserProfile: null
+    },
 
-    }),
+
     reducers: {
         listenToCurrentUserProfile: (state, {payload}) => {
             state.currentUserProfile = payload;
         },
         resetProfileState: (state) => {
             state.currentUserProfile = null;
-            profileAdapter.removeAll(state)
+            state.selectedUserProfile = null;
+        },
+        listenToSelectedUserProfile: (state, {payload}) => {
+            state.selectedUserProfile = payload;
         }
 
     },
@@ -44,11 +64,23 @@ export const profileSlice = createSlice({
             state.status = "pending";
         },
         [listenCurrentUserProfileAsync.fulfilled]: (state, {payload}) => {
-            profileAdapter.upsertOne(state, payload);
+            state.currentUserProfile = payload;
             state.status = "idle"
             state.error = null;
         },
         [listenCurrentUserProfileAsync.rejected]: (state, {payload}) => {
+            state.status = "idle";
+            state.error = {payload};
+        },
+        [listenToSelectedUserProfile.pending]: (state) => {
+            state.status = "pending";
+        },
+        [listenToSelectedUserProfile.fulfilled]: (state, {payload}) => {
+            state.selectedUserProfile = payload;
+            state.status = "idle"
+            state.error = null;
+        },
+        [listenToSelectedUserProfile.rejected]: (state, {payload}) => {
             state.status = "idle";
             state.error = {payload};
         }

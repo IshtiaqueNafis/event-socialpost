@@ -79,9 +79,7 @@ export const updateUserPassword = (creds) => {
     return user.updatePassword(creds.newPassword1);
 }
 
-export const getUserProfile = (userId) => {
-    return db.collection('users').doc(userId);
-}
+export const getUserProfile =  (userId) => db.collection('users').doc(userId)
 
 export async function updateUserProfile(profile) {
     const user = firebase.auth().currentUser;
@@ -94,5 +92,37 @@ export async function updateUserProfile(profile) {
         return await db.collection('users').doc(user.uid).update(profile);
     } catch (e) {
         throw e;
+    }
+}
+
+export function uploadToFirebaseStorage(file, filename) {
+    const user = firebase.auth().currentUser;
+
+    const storageRef = firebase.storage().ref();
+    return storageRef.child(`${user.uid}/user_images/${filename}`).put(file);
+}
+
+export async function updateUserProfilePhoto(downloadUrl, filename) {
+    const user = firebase.auth().currentUser;
+    const userDocRef = db.collection('users').doc(user.uid);
+    try {
+        const userDoc = await userDocRef.get(); // get the user document
+        if (!userDoc.data().photoUrl) {
+            await db.collection('users').doc(user.uid).update({
+                photoUrl: downloadUrl
+            })
+            // update user current profile
+            await user.updateProfile({
+                photoURL: downloadUrl
+            })
+
+        }
+        return await db.collection('users').doc(user.uid).collection('photos').add({
+            name:filename,
+            url: downloadUrl
+        })
+    } catch (e) {
+        console.log({e})
+throw  e
     }
 }

@@ -6,6 +6,8 @@ import {authReducer} from "../reducer/authSliceReducer";
 import {logger} from "redux-logger/src";
 import {profileReducer} from "../reducer/profileSliceReducer";
 
+
+
 export const store = configureStore({
     reducer: {
         modal: modalReducer,

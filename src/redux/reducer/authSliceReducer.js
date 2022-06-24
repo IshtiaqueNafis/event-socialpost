@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {AsyncActionError} from "./asyncSliceReducer";
+import {AsyncActionError, asyncAppLoaded} from "./asyncSliceReducer";
 import firebase from "firebase/compat/app";
-import {setUserProfileData} from "../../app/firestore/fireStoreService";
+import {dataFromSnapshot, getUserProfile, setUserProfileData} from "../../app/firestore/fireStoreService";
 import {closeModal} from "./modalSliceReducer";
-import {resetProfileState} from "./profileSliceReducer";
+import {listenCurrentUserProfileAsync, listenToCurrentUserProfile, resetProfileState} from "./profileSliceReducer";
 
 
 const initialState = {
@@ -21,7 +21,6 @@ export const signInUser = createAsyncThunk(
         try {
             await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
             thunkApi.dispatch(closeModal());
-
 
 
         } catch (e) {
@@ -50,12 +49,40 @@ export const registerUserAsync = createAsyncThunk(
 
 export const setUserAsync = createAsyncThunk(
     "auth/setUserAsync",
-    async ({user},thunkApi)=>{
+    async ({user}, thunkApi) => {
         try {
             return user;
-        }catch (e) {
+        } catch (e) {
 
         }
+    }
+)
+
+export const verifyAuth = createAsyncThunk(
+    'auth/verifyUser',
+    async (_, thunkApi) => {
+        try {
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    thunkApi.dispatch(setUser(user));
+                    const profileRef = getUserProfile(user.uid);
+                    profileRef.onSnapshot(snapshot => {
+                        thunkApi.dispatch(listenToCurrentUserProfile(dataFromSnapshot(snapshot)));
+                        thunkApi.dispatch(asyncAppLoaded());
+                    })
+                } else {
+                    thunkApi.dispatch(resetUser());
+                    thunkApi.dispatch(resetProfileState());
+                    thunkApi.dispatch(asyncAppLoaded());
+                }
+            })
+        } catch (e) {
+
+        }
+
+
+    },{
+
     }
 )
 
@@ -69,9 +96,6 @@ export const signOutUser = createAsyncThunk(
             await firebase.auth().signOut();
 
 
-
-
-
         } catch (e) {
             return thunkApi.dispatch(AsyncActionError(e.messages))
         }
@@ -82,9 +106,23 @@ export const authSlice = createSlice({
     name: "Auth",
     initialState: initialState,
     reducers: {
+        setUser: (state,{payload}) => {
+            state.currentUser = {
+                email: payload.email,
+                photoUrl: payload.photoURL,
+                uid: payload.uid,
+                displayName: payload.displayName,
+                providerId: payload.providerData[0].providerId
+            };
+            state.authenticated = true;
+        },
+
         resetUser: (state) => {
             state.currentUser = null;
             state.authenticated = false;
+        },
+        setAuthenticated: (state) => {
+            state.authenticated = true;
         }
     },
     extraReducers: {
@@ -130,11 +168,12 @@ export const authSlice = createSlice({
             state.status = "idle";
             state.error = action.payload;
         },
-        [setUserAsync.pending]:(state)=>{
+        [setUserAsync.pending]: (state) => {
             state.status = "pending";
+            state.authenticated = false;
         },
-        [setUserAsync.fulfilled]:(state,{payload})=>{
-            state.currentUser ={
+        [setUserAsync.fulfilled]: (state, {payload}) => {
+            state.currentUser = {
                 email: payload.email,
                 photoUrl: payload.photoURL,
                 uid: payload.uid,
@@ -143,10 +182,13 @@ export const authSlice = createSlice({
             }
             state.authenticated = true;
             state.status = "idle";
+        },
+        [verifyAuth.pending]: (state) => {
+
         }
 
     }
 });
-export const {resetUser} = authSlice.actions;
+export const {resetUser, setAuthenticated,setUser} = authSlice.actions;
 export const authReducer = authSlice.reducer;
 
