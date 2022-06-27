@@ -16,12 +16,16 @@ const EventDetailedPage = () => {
     const dispatch = useDispatch();
     const event = useSelector(state => eventSelectors.selectById(state, id));
     const {status, error} = useSelector(state => state.events);
+    const {currentUser} = useSelector(state => state.auth);
+    const isHost = event?.hostUid === currentUser.uid;
+    const isGoing = event?.attendees?.some(a => a.id === currentUser.uid); // teels if current user is on the attendetes list
+
 
     useFireStoreDoc({
         query: () => listenToEventFromFirestore(id),
         data: (event) => dispatch(getEventDetailsAsync({event})),
-        deps: [ dispatch, id]
-    })
+        deps: [dispatch, id]
+    });
 
     if (status === 'pending' || (!event && !error)) return <LoadingComponent content={'Loading Event'}/>
     if (error) return <Redirect to={'/error'}/>
@@ -29,7 +33,7 @@ const EventDetailedPage = () => {
     return (
         <Grid>
             <Grid.Column width={10}>
-                <EventDetailedHeader event={event}/>
+                <EventDetailedHeader event={event} isGoing={isGoing} isHost={isHost} />
                 <EventDetailedInfo event={event}/>
                 <EventDetailedChat/>
             </Grid.Column>

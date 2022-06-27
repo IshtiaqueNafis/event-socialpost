@@ -1,7 +1,6 @@
 import {createAsyncThunk, createEntityAdapter, createSlice} from "@reduxjs/toolkit";
 import {cancelEventToggle, dataFromSnapshot, listenToEventsFromFirestore} from "../../app/firestore/fireStoreService";
 import firebase from "firebase/compat/app";
-import cuid from "cuid";
 
 const eventAdapter = createEntityAdapter({
     selectId: (event) => event.id
@@ -48,15 +47,19 @@ export const addEventsAsync = createAsyncThunk(
     'event/addEventsAsync',
     async ({event}, thunkApi) => {
         try {
+            const user = firebase.auth().currentUser;
             const eventRef = await listenToEventsFromFirestore().add({
                 ...event,
-                hostedBy: 'Diana',
-                hostPhotoURL: 'https://randomuser.me/api/portraits/women/20.jpg',
+                hostUid: user.uid,
+                hostedBy: user.displayName,
+                hostPhotoURL: user.photoURL || null,
                 attendees: firebase.firestore.FieldValue.arrayUnion({
-                    id: cuid(),
-                    hostedBy: 'Diana',
-                    photoURL: 'https://randomuser.me/api/portraits/women/20.jpg'
-                })
+                    id: user.uid,
+                    hostedBy: user.displayName,
+                    photoURL: user.photoURL || null
+
+                }),
+                attendeeIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
 
             })
 
@@ -72,11 +75,11 @@ export const addEventsAsync = createAsyncThunk(
 )
 export const updateEventAsync = createAsyncThunk(
     'event/UpdateEventsAsync',
-    async ({event,isCancelled}, thunkApi) => {
+    async ({event, isCancelled}, thunkApi) => {
         try {
             await listenToEventsFromFirestore().doc(event.id).update(event);
 
-            if(isCancelled!==undefined){
+            if (isCancelled !== undefined) {
                 await cancelEventToggle(event);
             }
 
