@@ -1,4 +1,5 @@
 import {createAsyncThunk, createEntityAdapter, createSlice} from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
 
 
 const profileAdapter = createEntityAdapter({
@@ -36,13 +37,26 @@ export const listenToSelectedUserProfile = createAsyncThunk(
     }
 )
 
+export const listenToUserPhotosAsync = createAsyncThunk(
+    'profile/getPhotosUser',
+    async ({photos}, thunkApi) => {
+        try {
+           
+            return photos;
+        } catch (e) {
+            return thunkApi.rejectWithValue({error: e.message});
+        }
+    }
+    ,)
+
 export const profileSlice = createSlice({
     name: 'profile',
     initialState: {
         status: 'idle',
         error: null,
         currentUserProfile: null,
-        selectedUserProfile: null
+        selectedUserProfile: null,
+        photos: []
     },
 
 
@@ -81,6 +95,18 @@ export const profileSlice = createSlice({
             state.error = null;
         },
         [listenToSelectedUserProfile.rejected]: (state, {payload}) => {
+            state.status = "idle";
+            state.error = {payload};
+        },
+        [listenToUserPhotosAsync.pending]: (state) => {
+            state.status = "pending";
+        },
+        [listenToUserPhotosAsync.fulfilled]: (state, {payload}) => {
+            state.photos = [...payload];
+            state.status = "idle"
+            state.error = null;
+        },
+        [listenToUserPhotosAsync.rejected]: (state, {payload}) => {
             state.status = "idle";
             state.error = {payload};
         }

@@ -62,18 +62,18 @@ export const verifyAuth = createAsyncThunk(
     'auth/verifyUser',
     async (_, thunkApi) => {
         try {
-            firebase.auth().onAuthStateChanged(user => {
+          return  await firebase.auth().onAuthStateChanged(user => {
                 if (user) {
                     thunkApi.dispatch(setUser(user));
                     const profileRef = getUserProfile(user.uid);
                     profileRef.onSnapshot(snapshot => {
                         thunkApi.dispatch(listenToCurrentUserProfile(dataFromSnapshot(snapshot)));
-                        thunkApi.dispatch(asyncAppLoaded());
+                        
                     })
                 } else {
                     thunkApi.dispatch(resetUser());
                     thunkApi.dispatch(resetProfileState());
-                    thunkApi.dispatch(asyncAppLoaded());
+                    
                 }
             })
         } catch (e) {
@@ -109,7 +109,7 @@ export const authSlice = createSlice({
         setUser: (state,{payload}) => {
             state.currentUser = {
                 email: payload.email,
-                photoUrl: payload.photoURL,
+                photoURL: payload.photoURL,
                 uid: payload.uid,
                 displayName: payload.displayName,
                 providerId: payload.providerData[0].providerId
@@ -175,7 +175,7 @@ export const authSlice = createSlice({
         [setUserAsync.fulfilled]: (state, {payload}) => {
             state.currentUser = {
                 email: payload.email,
-                photoUrl: payload.photoURL,
+                photoURL: payload.photoURL,
                 uid: payload.uid,
                 displayName: payload.displayName,
                 providerId: payload.providerData[0].providerId

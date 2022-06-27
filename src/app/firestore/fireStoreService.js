@@ -50,7 +50,7 @@ export const setUserProfileData = (user) => {
     return db.collection('users').doc(user.uid).set({
         displayName: user.displayName,
         email: user.email,
-        photoUrl: user.photoURL || null,
+        photoURL: user.photoURL || null,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     })
 }
@@ -109,7 +109,7 @@ export async function updateUserProfilePhoto(downloadUrl, filename) {
         const userDoc = await userDocRef.get(); // get the user document
         if (!userDoc.data().photoUrl) {
             await db.collection('users').doc(user.uid).update({
-                photoUrl: downloadUrl
+                photoURL: downloadUrl
             })
             // update user current profile
             await user.updateProfile({
@@ -124,5 +124,24 @@ export async function updateUserProfilePhoto(downloadUrl, filename) {
     } catch (e) {
         console.log({e})
 throw  e
+    }
+}
+
+export  const getUserPhotos=(userUid)=>{
+    return db.collection('users').doc(userUid).collection('photos')
+}
+
+export const setMainPhoto=async (photo) => {
+    const user = firebase.auth().currentUser;
+    try {
+        await db.collection('users').doc(user.uid).update({
+            photoURL: photo.url
+        });
+        return user.updateProfile({
+            photoURL: photo.url
+        })
+
+    } catch (e) {
+        throw e;
     }
 }

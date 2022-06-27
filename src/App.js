@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Container} from "semantic-ui-react";
 import {ToastContainer} from "react-toastify";
 import {Route} from "react-router-dom";
@@ -17,14 +17,26 @@ import {verifyAuth} from "./redux/reducer/authSliceReducer";
 import AccountPage from "./features/auth/AccountPage";
 import LoadingComponent from "./layout/LoadingComponent";
 import ProfilePage from "./features/profiles/profilePage/ProfilePage";
+import {useVerifyAuth} from "./app/hooks/useVeirifyAuth";
+import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
 
 const App = () => {
 
     const {initialized} = useSelector(state => state.async);
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(verifyAuth());
+
+    const initApp = useCallback(async () => {
+        await dispatch(verifyAuth());
     }, [dispatch])
+
+    useEffect(() => {
+        setTimeout(() => {
+            initApp().then(() => dispatch(asyncAppLoaded()));
+        }, 500)
+
+
+        
+    }, [initApp,dispatch])
 
     if (!initialized) return <LoadingComponent content={'Loading App'}/>;
 

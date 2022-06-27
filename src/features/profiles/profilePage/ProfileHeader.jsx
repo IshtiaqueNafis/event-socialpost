@@ -9,7 +9,7 @@ const ProfileHeader = ({profile, isCurrentUser}) => {
                 <Grid.Column width={12}>
                     <Item.Group>
                         <Item>
-                            <Item.Image avatar size={'small'} src={profile.photoUrl || "/assets/user.png"}/>
+                            <Item.Image avatar size={'small'} src={profile.photoURL || "/assets/user.png"}/>
                             <Item.Content verticalAlign={'middle'}>
                                 <Header as={'h1'} style={{display: 'block', marginBottom: 10}}
                                         content={profile.displayName}/>

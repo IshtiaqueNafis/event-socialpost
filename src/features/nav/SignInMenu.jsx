@@ -15,11 +15,11 @@ const SignInMenu = () => {
     return (
 
         <Menu.Item position="right">
-            <Image avatar spaced={'right'} src={currentUserProfile.photoUrl || '/assets/user.png'}/>
-            <Dropdown pointing={'top left'} text={currentUserProfile.displayName}>
+            <Image avatar spaced={'right'} src={currentUserProfile?.photoURL || '/assets/user.png'}/>
+            <Dropdown pointing={'top left'} text={currentUserProfile?.displayName}>
                 <Dropdown.Menu>
                     <Dropdown.Item as={Link} to={'/createEvent'} text="Create Event" icon={'plus'}/>
-                    <Dropdown.Item text="My Profile" icon={'user'} as={Link} to={`profile/${currentUserProfile.id}`}/>
+                    <Dropdown.Item text="My Profile" icon={'user'} as={Link} to={`profile/${currentUserProfile?.id}`}/>
                     <Dropdown.Item text="Account" icon={'user'} as={Link} to={'/account'}/>
                     <Dropdown.Item onClick={async () => {
                         await dispatch(signOutUser())

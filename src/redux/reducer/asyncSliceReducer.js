@@ -21,6 +21,9 @@ export const asyncSlice = createSlice({
         },
         asyncAppLoaded:(state)=>{
             state.initialized = true;
+        },
+        disableAsyncAppLoadded:(state)=>{
+            state.initialized = false;
         }
         //endregion
 
@@ -29,5 +32,5 @@ export const asyncSlice = createSlice({
 });
 
 
-export const {AsyncActionStart, AsyncActionFinish, AsyncActionError,asyncAppLoaded} = asyncSlice.actions;
+export const {AsyncActionStart, AsyncActionFinish, AsyncActionError,asyncAppLoaded,disableAsyncAppLoadded} = asyncSlice.actions;
 export const asyncReducer = asyncSlice.reducer;
