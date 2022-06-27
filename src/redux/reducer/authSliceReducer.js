@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {AsyncActionError, asyncAppLoaded} from "./asyncSliceReducer";
+import {AsyncActionError} from "./asyncSliceReducer";
 import firebase from "firebase/compat/app";
 import {dataFromSnapshot, getUserProfile, setUserProfileData} from "../../app/firestore/fireStoreService";
 import {closeModal} from "./modalSliceReducer";
-import {listenCurrentUserProfileAsync, listenToCurrentUserProfile, resetProfileState} from "./profileSliceReducer";
+import {listenToCurrentUserProfile, resetProfileState} from "./profileSliceReducer";
 
 
 const initialState = {
@@ -62,18 +62,18 @@ export const verifyAuth = createAsyncThunk(
     'auth/verifyUser',
     async (_, thunkApi) => {
         try {
-          return  await firebase.auth().onAuthStateChanged(user => {
+            return await firebase.auth().onAuthStateChanged(user => {
                 if (user) {
                     thunkApi.dispatch(setUser(user));
                     const profileRef = getUserProfile(user.uid);
                     profileRef.onSnapshot(snapshot => {
                         thunkApi.dispatch(listenToCurrentUserProfile(dataFromSnapshot(snapshot)));
-                        
+
                     })
                 } else {
                     thunkApi.dispatch(resetUser());
                     thunkApi.dispatch(resetProfileState());
-                    
+
                 }
             })
         } catch (e) {
@@ -81,9 +81,7 @@ export const verifyAuth = createAsyncThunk(
         }
 
 
-    },{
-
-    }
+    }, {}
 )
 
 
@@ -106,7 +104,7 @@ export const authSlice = createSlice({
     name: "Auth",
     initialState: initialState,
     reducers: {
-        setUser: (state,{payload}) => {
+        setUser: (state, {payload}) => {
             state.currentUser = {
                 email: payload.email,
                 photoURL: payload.photoURL,
@@ -189,6 +187,6 @@ export const authSlice = createSlice({
 
     }
 });
-export const {resetUser, setAuthenticated,setUser} = authSlice.actions;
+export const {resetUser, setAuthenticated, setUser} = authSlice.actions;
 export const authReducer = authSlice.reducer;
 

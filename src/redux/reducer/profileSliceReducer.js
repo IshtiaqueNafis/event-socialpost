@@ -1,5 +1,4 @@
 import {createAsyncThunk, createEntityAdapter, createSlice} from "@reduxjs/toolkit";
-import thunk from "redux-thunk";
 
 
 const profileAdapter = createEntityAdapter({
@@ -41,7 +40,7 @@ export const listenToUserPhotosAsync = createAsyncThunk(
     'profile/getPhotosUser',
     async ({photos}, thunkApi) => {
         try {
-           
+
             return photos;
         } catch (e) {
             return thunkApi.rejectWithValue({error: e.message});

@@ -7,15 +7,16 @@ import {getFileExtension} from "../utlis/util";
 import {updateUserProfilePhoto, uploadToFirebaseStorage} from "../../firestore/fireStoreService";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
-import {asyncAppLoaded, disableAsyncAppLoadded} from "../../../redux/reducer/asyncSliceReducer";
+import {asyncAppLoaded} from "../../../redux/reducer/asyncSliceReducer";
 
 const PhotoUploadWidget = ({setEditMode}) => {
     const [files, setFiles] = useState([]);
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+
     function handleUploadImage() {
-        
+
         setLoading(true);
         const fileName = `${cuid()}.${getFileExtension(files[0].name)}`;
         const upLoadTask = uploadToFirebaseStorage(image, fileName);
@@ -35,7 +36,7 @@ const PhotoUploadWidget = ({setEditMode}) => {
             }).catch(error => {
                 toast.error(error.message)
                 setLoading(false);
-                
+
             });
         })
     }
@@ -45,7 +46,6 @@ const PhotoUploadWidget = ({setEditMode}) => {
         setImage([])
     }
 
-    
 
     return (
         <Grid>

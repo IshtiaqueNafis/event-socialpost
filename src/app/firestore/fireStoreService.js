@@ -79,7 +79,7 @@ export const updateUserPassword = (creds) => {
     return user.updatePassword(creds.newPassword1);
 }
 
-export const getUserProfile =  (userId) => db.collection('users').doc(userId)
+export const getUserProfile = (userId) => db.collection('users').doc(userId)
 
 export async function updateUserProfile(profile) {
     const user = firebase.auth().currentUser;
@@ -118,20 +118,20 @@ export async function updateUserProfilePhoto(downloadUrl, filename) {
 
         }
         return await db.collection('users').doc(user.uid).collection('photos').add({
-            name:filename,
+            name: filename,
             url: downloadUrl
         })
     } catch (e) {
         console.log({e})
-throw  e
+        throw  e
     }
 }
 
-export  const getUserPhotos=(userUid)=>{
+export const getUserPhotos = (userUid) => {
     return db.collection('users').doc(userUid).collection('photos')
 }
 
-export const setMainPhoto=async (photo) => {
+export const setMainPhoto = async (photo) => {
     const user = firebase.auth().currentUser;
     try {
         await db.collection('users').doc(user.uid).update({
@@ -144,4 +144,16 @@ export const setMainPhoto=async (photo) => {
     } catch (e) {
         throw e;
     }
+}
+
+export const deleteFromFirebaseStorage = (fileName) => {
+    const userUid = firebase.auth().currentUser.uid;
+    const storageRef = firebase.storage().ref();
+    const photoRef = storageRef.child(`${userUid}/user_images/${fileName}`);
+    return photoRef.delete();
+}
+
+export const deletePhotoFromCollection = (photoId) => {
+    const userUid = firebase.auth().currentUser.uid;
+    return db.collection('users').doc(userUid).collection('photos').doc(photoId).delete()
 }

@@ -12,12 +12,10 @@ import ModalManager from "./app/common/modals/ModalManager";
 import ErrorComponent from "./app/common/ErrorComponent";
 import CreateEvent from "./features/events/eventForm/CreateEvent";
 import {useDispatch, useSelector} from "react-redux";
-
 import {verifyAuth} from "./redux/reducer/authSliceReducer";
 import AccountPage from "./features/auth/AccountPage";
 import LoadingComponent from "./layout/LoadingComponent";
 import ProfilePage from "./features/profiles/profilePage/ProfilePage";
-import {useVerifyAuth} from "./app/hooks/useVeirifyAuth";
 import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
 
 const App = () => {
@@ -35,8 +33,7 @@ const App = () => {
         }, 500)
 
 
-        
-    }, [initApp,dispatch])
+    }, [initApp, dispatch])
 
     if (!initialized) return <LoadingComponent content={'Loading App'}/>;
 
