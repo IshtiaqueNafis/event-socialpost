@@ -3,7 +3,7 @@ import {Button, Header, Image, Item, Segment} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {format} from "date-fns";
 import {toast} from "react-toastify";
-import {adduserAttendance, cancelEventToggle, cancelUserAttendance} from "../../../app/firestore/fireStoreService";
+import {adduserAttendance, cancelUserAttendance} from "../../../app/firestore/fireStoreService";
 
 const eventImageStyle = {
     filter: 'brightness(30%)'
@@ -58,7 +58,8 @@ const EventDetailedHeader = ({event, isGoing, isHost}) => {
                                 />
                                 <p>{format(event.date, 'MMMM d, yyyy h:mm a')}</p>
                                 <p>
-                                    Hosted by <strong> <Link to={`/profile/${event.hostUid}`}>{event.hostedBy}</Link> </strong>
+                                    Hosted by <strong> <Link to={`/profile/${event.hostUid}`}>{event.hostedBy}</Link>
+                                </strong>
                                 </p>
                             </Item.Content>
                         </Item>

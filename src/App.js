@@ -17,7 +17,6 @@ import AccountPage from "./features/auth/AccountPage";
 import LoadingComponent from "./layout/LoadingComponent";
 import ProfilePage from "./features/profiles/profilePage/ProfilePage";
 import {asyncAppLoaded} from "./redux/reducer/asyncSliceReducer";
-import {useStateIfMounted} from "use-state-if-mounted";
 
 const App = () => {
 
@@ -30,12 +29,14 @@ const App = () => {
 
     useEffect(() => {
         let isMounted = true;
-        initApp().then(()=>{
-            if (isMounted){
+        initApp().then(() => {
+            if (isMounted) {
                 dispatch(asyncAppLoaded());
             }
         })
-        return () => { isMounted = false };
+        return () => {
+            isMounted = false
+        };
 
     }, [initApp, dispatch])
 

@@ -3,7 +3,6 @@ import {
     cancelEventToggle,
     dataFromSnapshot,
     eventsFromFireStore,
-    listenToEventFromFirestore,
     listenToEventsFromFirestoreQuery
 } from "../../app/firestore/fireStoreService";
 import firebase from "firebase/compat/app";
@@ -33,7 +32,6 @@ export const getEventDetailsAsync = createAsyncThunk(
 
 
         try {
-
 
 
             return event;
@@ -115,7 +113,7 @@ export const eventSlice = createSlice({
         error: null
     }),
     reducers: {
-        setFilter:(state)=>{
+        setFilter: (state) => {
             state.eventsLoaded = false;
         }
 

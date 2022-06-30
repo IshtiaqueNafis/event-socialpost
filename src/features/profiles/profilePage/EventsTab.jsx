@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from "react-redux";
 import useFireStoreCollection from "../../../app/hooks/useFireStoreCollection";
 import {getUserEventQuery} from "../../../app/firestore/fireStoreService";
 import {listenToUserEvents} from "../../../redux/reducer/profileSliceReducer";
-import LoadingComponent from "../../../layout/LoadingComponent";
 import {format} from "date-fns";
 
 const EventsTab = ({profile, isCurrentUser}) => {
@@ -25,9 +24,8 @@ const EventsTab = ({profile, isCurrentUser}) => {
     })
 
 
-
     return (
-        <Tab.Pane loading={status==="pending"}>
+        <Tab.Pane loading={status === "pending"}>
 
             <Grid>
                 <Grid.Column width={16}>
@@ -47,8 +45,8 @@ const EventsTab = ({profile, isCurrentUser}) => {
                                 <Card.Content>
                                     <Card.Header content={event.title} textAlign={'center'}/>
                                     <Card.Meta textAlign={'center'}>
-                                        <div>{format(event.date,'dd MMM yyyy')}</div>
-                                        <div>{format(event.date,'hh:mm a')}</div>
+                                        <div>{format(event.date, 'dd MMM yyyy')}</div>
+                                        <div>{format(event.date, 'hh:mm a')}</div>
 
                                     </Card.Meta>
                                 </Card.Content>
