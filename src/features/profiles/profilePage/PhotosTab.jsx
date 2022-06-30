@@ -2,7 +2,12 @@ import React, {useState} from 'react';
 import {Button, Card, Grid, Header, Image, Tab} from "semantic-ui-react";
 import PhotoUploadWidget from "../../../app/common/photos/PhotoUploadWidget";
 import useFireStoreCollection from "../../../app/hooks/useFireStoreCollection";
-import {deletePhotoFromCollection, getUserPhotos, setMainPhoto} from "../../../app/firestore/fireStoreService";
+import {
+    deleteFromFirebaseStorage,
+    deletePhotoFromCollection,
+    getUserPhotos,
+    setMainPhoto
+} from "../../../app/firestore/fireStoreService";
 import {useDispatch, useSelector} from "react-redux";
 import {listenToUserPhotosAsync} from "../../../redux/reducer/profileSliceReducer";
 import {toast} from "react-toastify";
@@ -31,7 +36,7 @@ const PhotosTab = ({profile, isCurrentUser}) => {
         setDeleting({isDeleting: true, target})
         try {
             await deletePhotoFromCollection(photo.id);
-            await deletePhotoFromCollection(photo.id);
+            await deleteFromFirebaseStorage(photo)
         } catch (e) {
 
             toast.error(e.message)

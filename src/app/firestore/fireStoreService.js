@@ -26,10 +26,9 @@ export const listenToEventsFromFirestoreQuery = (predicate) => {
 };
 //endregion
 
-export const eventsFromFireStore = () =>{
+export const eventsFromFireStore = () => {
     return db.collection('events')
 }
-
 
 
 //region dataFromSnapshot(snapshot) returns data on usable format
@@ -59,17 +58,10 @@ export const listenToEventFromFirestore = eventId => db.collection('events').doc
 //endregion
 
 export const cancelEventToggle = (event) =>
-    listenToEventsFromFirestoreQuery().doc(event.id).update({
+    eventsFromFireStore().doc(event.id).update({
         isCancelled: !event.isCancelled
     })
-export const queryDataCollection = async ({query}) => {
-    const data = await query().onSnapshot(
-        snapshot => {
-            snapshot.docs.map(doc => dataFromSnapshot(doc));
-        });
-    console.log({data});
-    return data;
-};
+
 
 export const setUserProfileData = (user) => {
     return db.collection('users').doc(user.uid).set({
@@ -152,12 +144,12 @@ export async function updateUserProfilePhoto(downloadUrl, filename) {
     }
 }
 
-export const getUserEventQuery=(activeTab,userUid)=>{
+export const getUserEventQuery = (activeTab, userUid) => {
     let eventsRef = db.collection('events');
     const today = new Date();
-    switch(activeTab){
+    switch (activeTab) {
         case 1: // past
-           return  eventsRef.where('attendeeIds', 'array-contains', userUid).where('date', "<=", today).orderBy('date', "desc");
+            return eventsRef.where('attendeeIds', 'array-contains', userUid).where('date', "<=", today).orderBy('date', "desc");
         case 2:
             return eventsRef.where('hostUid', '==', userUid).orderBy('date');
         default:
@@ -210,6 +202,7 @@ export const setMainPhoto = async (photo) => {
 
     } catch (e) {
         throw e;
+
     }
 }
 

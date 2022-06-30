@@ -108,6 +108,7 @@ export const deleteEventAsync = createAsyncThunk(
 export const eventSlice = createSlice({
     name: "Event",
     initialState: eventAdapter.getInitialState({
+        comments: [],
         eventsLoaded: false,
         status: "idle",
         error: null
@@ -115,7 +116,15 @@ export const eventSlice = createSlice({
     reducers: {
         setFilter: (state) => {
             state.eventsLoaded = false;
+        },
+        listenToEventChat: (state, {payload}) => {
+            state.comments = [...payload]
+        },
+
+        clearComments: (state) => {
+            state.comments = [];
         }
+
 
     },
 
@@ -184,7 +193,7 @@ export const eventSlice = createSlice({
         [deleteEventAsync.rejected]: (state, {payload}) => {
             state.status = "idle"
             state.error = payload
-        }
+        },
 
 
     }
@@ -198,4 +207,4 @@ export const {
     selectAll, // will return everything
 } = eventSelectors
 export const eventReducer = eventSlice.reducer;
-export const {setFilter} = eventSlice.actions
+export const {setFilter, listenToEventChat, clearComments} = eventSlice.actions
