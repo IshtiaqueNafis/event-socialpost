@@ -4,8 +4,33 @@ import {toast} from "react-toastify";
 const db = firebase.firestore();
 
 //region getEventsFromFirestore = observer --> gets event data fromFireStore.
-export const listenToEventsFromFirestore = () => db.collection('events');
+export const listenToEventsFromFirestoreQuery = (predicate) => {
+    const user = firebase.auth().currentUser;
+    let eventRef = db.collection('events').orderBy('date');
+    console.log({predicate})
+    switch (predicate.get('filter')) {
+
+        case 'isGoing':
+            return eventRef
+                .where("attendeeIds", 'array-contains', user.uid)
+
+        case 'isHost':
+
+
+            return eventRef.where("hostUid", '==', user.uid);
+
+        default:
+
+            return eventRef;
+    }
+};
 //endregion
+
+export const eventsFromFireStore = () =>{
+    return db.collection('events')
+}
+
+
 
 //region dataFromSnapshot(snapshot) returns data on usable format
 export const dataFromSnapshot = snapshot => {
@@ -34,7 +59,7 @@ export const listenToEventFromFirestore = eventId => db.collection('events').doc
 //endregion
 
 export const cancelEventToggle = (event) =>
-    listenToEventsFromFirestore().doc(event.id).update({
+    listenToEventsFromFirestoreQuery().doc(event.id).update({
         isCancelled: !event.isCancelled
     })
 export const queryDataCollection = async ({query}) => {
@@ -125,6 +150,48 @@ export async function updateUserProfilePhoto(downloadUrl, filename) {
         console.log({e})
         throw  e
     }
+}
+
+export const getUserEventQuery=(activeTab,userUid)=>{
+    let eventsRef = db.collection('events');
+    const today = new Date();
+    switch(activeTab){
+        case 1: // past
+           return  eventsRef.where('attendeeIds', 'array-contains', userUid).where('date', "<=", today).orderBy('date', "desc");
+        case 2:
+            return eventsRef.where('hostUid', '==', userUid).orderBy('date');
+        default:
+            return eventsRef.where('attendeeIds', 'array-contains', userUid).where('date', ">=", today).orderBy('date',);
+
+    }
+}
+
+export const adduserAttendance = (event) => {
+    const user = firebase.auth().currentUser
+    return db.collection('events').doc(event.id).update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL || null
+
+        }),
+        attendeeIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
+    })
+}
+
+export const cancelUserAttendance = async (event) => {
+    const user = firebase.auth().currentUser;
+
+    try {
+        const eventDoc = await db.collection('events').doc(event.id).get();
+        return db.collection('events').doc(event.id).update({
+            attendeeIds: firebase.firestore.FieldValue.arrayRemove(user.uid), // removed from array union first.
+            attendees: eventDoc.data().attendees.filter(a => a.id !== user.uid)
+        })
+    } catch (e) {
+        throw e;
+    }
+
 }
 
 export const getUserPhotos = (userUid) => {

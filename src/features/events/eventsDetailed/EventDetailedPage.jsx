@@ -17,8 +17,8 @@ const EventDetailedPage = () => {
     const event = useSelector(state => eventSelectors.selectById(state, id));
     const {status, error} = useSelector(state => state.events);
     const {currentUser} = useSelector(state => state.auth);
-    const isHost = event?.hostUid === currentUser.uid;
-    const isGoing = event?.attendees?.some(a => a.id === currentUser.uid); // teels if current user is on the attendetes list
+    const isHost = event?.hostUid === currentUser?.uid;
+    const isGoing = event?.attendees?.some(a => a.id === currentUser?.uid); // teels if current user is on the attendetes list
 
 
     useFireStoreDoc({
@@ -38,7 +38,7 @@ const EventDetailedPage = () => {
                 <EventDetailedChat/>
             </Grid.Column>
             <Grid.Column width={6}>
-                <EventDetailedSideBar attendees={event?.attendees}/>
+                <EventDetailedSideBar attendees={event?.attendees} hostUid = {event.hostUid} />
             </Grid.Column>
 
         </Grid>

@@ -47,7 +47,16 @@ export const listenToUserPhotosAsync = createAsyncThunk(
         }
     }
     ,)
-
+export const listenToUserEvents = createAsyncThunk(
+    'profile/listenToUserEvents',
+    async ({events}, thunkApi) => {
+        try {
+            return events;
+        } catch (e) {
+            return thunkApi.rejectWithValue(e.message)
+        }
+    }
+)
 export const profileSlice = createSlice({
     name: 'profile',
     initialState: {
@@ -55,7 +64,8 @@ export const profileSlice = createSlice({
         error: null,
         currentUserProfile: null,
         selectedUserProfile: null,
-        photos: []
+        photos: [],
+        profileEvents: []
     },
 
 
@@ -108,7 +118,19 @@ export const profileSlice = createSlice({
         [listenToUserPhotosAsync.rejected]: (state, {payload}) => {
             state.status = "idle";
             state.error = {payload};
-        }
+        },
+        [listenToUserEvents.pending]: (state) => {
+            state.status = "pending";
+        },
+        [listenToUserEvents.fulfilled]: (state, {payload}) => {
+            state.profileEvents = [...payload];
+            state.status = "idle";
+        },
+        [listenToUserEvents.rejected]: (state, {payload}) => {
+            state.status = "idle";
+            state.error = {payload};
+        },
+
     }
 })
 export const {listenToCurrentUserProfile, resetProfileState} = profileSlice.actions;

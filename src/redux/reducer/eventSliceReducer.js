@@ -1,5 +1,11 @@
 import {createAsyncThunk, createEntityAdapter, createSlice} from "@reduxjs/toolkit";
-import {cancelEventToggle, dataFromSnapshot, listenToEventsFromFirestore} from "../../app/firestore/fireStoreService";
+import {
+    cancelEventToggle,
+    dataFromSnapshot,
+    eventsFromFireStore,
+    listenToEventFromFirestore,
+    listenToEventsFromFirestoreQuery
+} from "../../app/firestore/fireStoreService";
 import firebase from "firebase/compat/app";
 
 const eventAdapter = createEntityAdapter({
@@ -11,9 +17,7 @@ export const loadEvents = createAsyncThunk(
     'event/LoadEvents',
     async ({events}, thunkApi) => {
         try {
-            if (events.length === 0) {
-                return thunkApi.rejectWithValue({error: 'could not find data'});
-            }
+
             return events;
 
 
@@ -31,9 +35,6 @@ export const getEventDetailsAsync = createAsyncThunk(
         try {
 
 
-            if (event === undefined) {
-                return thunkApi.rejectWithValue({message: 'data not found'});
-            }
 
             return event;
 
@@ -48,7 +49,7 @@ export const addEventsAsync = createAsyncThunk(
     async ({event}, thunkApi) => {
         try {
             const user = firebase.auth().currentUser;
-            const eventRef = await listenToEventsFromFirestore().add({
+            const eventRef = await eventsFromFireStore().add({
                 ...event,
                 hostUid: user.uid,
                 hostedBy: user.displayName,
@@ -56,6 +57,7 @@ export const addEventsAsync = createAsyncThunk(
                 attendees: firebase.firestore.FieldValue.arrayUnion({
                     id: user.uid,
                     hostedBy: user.displayName,
+                    displayName: user.displayName,
                     photoURL: user.photoURL || null
 
                 }),
@@ -66,7 +68,7 @@ export const addEventsAsync = createAsyncThunk(
             if (!eventRef) {
                 return thunkApi.rejectWithValue('something went wrong');
             }
-            return await listenToEventsFromFirestore().doc(eventRef.id).get().then(snapshot => dataFromSnapshot(snapshot));
+            return await eventsFromFireStore().doc(eventRef.id).get().then(snapshot => dataFromSnapshot(snapshot));
 
         } catch (e) {
             return thunkApi.rejectWithValue('something went wrong');
@@ -77,13 +79,13 @@ export const updateEventAsync = createAsyncThunk(
     'event/UpdateEventsAsync',
     async ({event, isCancelled}, thunkApi) => {
         try {
-            await listenToEventsFromFirestore().doc(event.id).update(event);
+            await listenToEventsFromFirestoreQuery().doc(event.id).update(event);
 
             if (isCancelled !== undefined) {
                 await cancelEventToggle(event);
             }
 
-            const changes = await listenToEventsFromFirestore().doc(event.id).get().then(snapshot => dataFromSnapshot(snapshot));
+            const changes = await listenToEventsFromFirestoreQuery().doc(event.id).get().then(snapshot => dataFromSnapshot(snapshot));
 
 
             return {id: event.id, changes}
@@ -97,7 +99,7 @@ export const deleteEventAsync = createAsyncThunk(
     'event/DeleteEventsAsync',
     async ({id}, thunkApi) => {
         try {
-            await listenToEventsFromFirestore().doc(id).delete();
+            await listenToEventsFromFirestoreQuery().doc(id).delete();
             return id;
         } catch (e) {
             return thunkApi.rejectWithValue('something went wrong');
@@ -112,7 +114,12 @@ export const eventSlice = createSlice({
         status: "idle",
         error: null
     }),
-    reducers: {},
+    reducers: {
+        setFilter:(state)=>{
+            state.eventsLoaded = false;
+        }
+
+    },
 
     extraReducers: {
         [getEventDetailsAsync.pending]: (state) => {
@@ -134,9 +141,8 @@ export const eventSlice = createSlice({
         },
         [loadEvents.fulfilled]: (state, {payload}) => {
             eventAdapter.setAll(state, payload);
-
             state.status = "idle"
-            state.eventsLoaded = false;
+            state.eventsLoaded = true;
             state.error = null;
         },
         [loadEvents.rejected]: (state, {payload}) => {
@@ -194,3 +200,4 @@ export const {
     selectAll, // will return everything
 } = eventSelectors
 export const eventReducer = eventSlice.reducer;
+export const {setFilter} = eventSlice.actions
